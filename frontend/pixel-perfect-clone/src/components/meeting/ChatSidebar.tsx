@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { api, ChatMessage, Meeting } from "@/lib/api";
+import { api, ChatMessage, Meeting, getWebSocketUrl } from "@/lib/api";
 import { Send, Shield } from "lucide-react";
 import { format } from "date-fns";
 import { Switch } from "@/components/ui/switch";
@@ -32,7 +32,7 @@ export function ChatSidebar({ meeting, currentUser, isHost }: ChatSidebarProps) 
     fetchMessages();
     
     // Connect to WebSocket
-    const wsUrl = `ws://localhost:8000/ws/meeting/${meeting.meeting_id}/`;
+    const wsUrl = getWebSocketUrl(meeting.meeting_id);
     const ws = new WebSocket(wsUrl);
     
     ws.onmessage = (event) => {

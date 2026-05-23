@@ -2,6 +2,19 @@
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/meetings';
 
+export const getWebSocketUrl = (meetingId: string) => {
+  if (process.env.NEXT_PUBLIC_WS_URL) {
+    return `${process.env.NEXT_PUBLIC_WS_URL}/ws/meeting/${meetingId}/`;
+  }
+  try {
+    const url = new URL(API_BASE_URL);
+    const wsProtocol = url.protocol === 'https:' ? 'wss:' : 'ws:';
+    return `${wsProtocol}//${url.host}/ws/meeting/${meetingId}/`;
+  } catch (e) {
+    return `ws://localhost:8000/ws/meeting/${meetingId}/`;
+  }
+};
+
 export interface Meeting {
   id: number;
   meeting_id: string;

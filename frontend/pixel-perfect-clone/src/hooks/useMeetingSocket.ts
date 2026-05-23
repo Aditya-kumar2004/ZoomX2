@@ -1,6 +1,6 @@
 import { useMeeting } from "@/components/meeting/MeetingContext";
 import { useWebRTC } from "./useWebRTC";
-import { api } from "@/lib/api";
+import { api, getWebSocketUrl } from "@/lib/api";
 import { toast } from "sonner";
 
 export function useMeetingSocket() {
@@ -31,7 +31,7 @@ export function useMeetingSocket() {
   const { sendOffer, handleOffer, handleAnswer, handleICECandidate } = useWebRTC();
 
   const connectSocket = () => {
-    const ws = new WebSocket(`ws://localhost:8000/ws/meeting/${meetingId}/`);
+    const ws = new WebSocket(getWebSocketUrl(meetingId));
     wsRef.current = ws;
 
     ws.onopen = () => {
