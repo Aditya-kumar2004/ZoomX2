@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: zoomx-backend
+    runtime: python
+    rootDir: ZoomX-clone-backend
+    buildCommand: "./build.sh"
+    startCommand: "daphne -b 0.0.0.0 -p $PORT project.asgi:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.5
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "*"
+      - key: FRONTEND_URL
+        value: "https://pixel-perfect-clone-lime.vercel.app"
