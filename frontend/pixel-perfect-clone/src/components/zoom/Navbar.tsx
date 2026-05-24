@@ -2,18 +2,35 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, ChevronDown, Sparkles, Grip, Menu, X } from "lucide-react";
+import { Search, ChevronDown, Sparkles, Grip, Menu, X, LogOut } from "lucide-react";
 import { handleComingSoon } from "@/lib/utils";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    
+    // Check localStorage for signed in user
+    const stored = localStorage.getItem("zoom_user_name");
+    setUserName(stored);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("zoom_user_name");
+    localStorage.removeItem("zoom_user_email");
+    localStorage.removeItem("zoom_is_host");
+    localStorage.removeItem("zoom_display_name");
+    setUserName(null);
+    window.location.href = "/";
+  };
 
   return (
     <nav
@@ -45,14 +62,14 @@ export function Navbar() {
             className="flex items-center gap-1 hover:text-[#0B5CFF]/85 cursor-pointer"
           >
             <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M9 3C9 6.3 6.3 9 3 9C6.3 9 9 11.7 9 15C9 11.7 11.7 9 15 9C11.7 9 9 6.3 9 3Z" fill="url(#sparkle-gradient-1)" />
-              <path d="M18 4C18 5.7 16.7 7 15 7C16.7 7 18 8.3 18 10C18 8.3 19.3 7 21 7C19.3 7 18 5.7 18 4Z" fill="url(#sparkle-gradient-2)" />
+              <path d="M9 3C9 6.3 6.3 9 3 9C6.3 9 9 11.7 9 15C9 11.7 11.7 9 15 9C11.7 9 9 6.3 9 3Z" fill="url(#sparkle-gradient-nav-1)" />
+              <path d="M18 4C18 5.7 16.7 7 15 7C16.7 7 18 8.3 18 10C18 8.3 19.3 7 21 7C19.3 7 18 5.7 18 4Z" fill="url(#sparkle-gradient-nav-2)" />
               <defs>
-                <linearGradient id="sparkle-gradient-1" x1="3" y1="9" x2="15" y2="9" gradientUnits="userSpaceOnUse">
+                <linearGradient id="sparkle-gradient-nav-1" x1="3" y1="9" x2="15" y2="9" gradientUnits="userSpaceOnUse">
                   <stop offset="0%" stopColor="#4A75FF" />
                   <stop offset="100%" stopColor="#8C52FF" />
                 </linearGradient>
-                <linearGradient id="sparkle-gradient-2" x1="15" y1="7" x2="21" y2="7" gradientUnits="userSpaceOnUse">
+                <linearGradient id="sparkle-gradient-nav-2" x1="15" y1="7" x2="21" y2="7" gradientUnits="userSpaceOnUse">
                   <stop offset="0%" stopColor="#8C52FF" />
                   <stop offset="100%" stopColor="#FF66D4" />
                 </linearGradient>
@@ -89,38 +106,63 @@ export function Navbar() {
           >
             Meet <ChevronDown size={14} />
           </button>
+          
           <Link href="/dashboard" className="hover:text-[#0B5CFF]/85 cursor-pointer">Dashboard</Link>
-          <Link href="/signin" className="hover:text-[#0B5CFF]/85 cursor-pointer">Sign In</Link>
-          <button 
-            onClick={() => handleComingSoon("Zoom Global Help Desk")}
-            className="hover:text-[#0B5CFF]/85 cursor-pointer bg-transparent border-0"
-          >
-            Support
-          </button>
-          <button
-            onClick={() => handleComingSoon("Enterprise Sales Inquiry")}
-            className="px-5 py-2 rounded-lg text-[#0E0E2A] text-[14px] font-bold transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
-            style={{
-              background: "#FFFFFF",
-              border: scrolled ? "1px solid rgba(14, 14, 42, 0.2)" : "none",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "#F3F4F6";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "#FFFFFF";
-            }}
-          >
-            Contact Sales
-          </button>
-          <Link href="/signup"
-            className="px-5 py-2 rounded-lg text-white text-[14px] font-bold animate-soft-pulse transition-all cursor-pointer hover:scale-[1.02]"
-            style={{ background: "var(--zoom-blue)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--zoom-blue-hover)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "var(--zoom-blue)")}
-          >
-            Sign Up Free
-          </Link>
+          
+          {userName ? (
+            <div className="flex items-center gap-3.5 pl-2 border-l border-zinc-500/20">
+              <div 
+                className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[13px] border border-blue-500/20 select-none shadow-sm cursor-pointer hover:bg-blue-500 transition-colors" 
+                title={userName}
+              >
+                {userName.substring(0, 2).toUpperCase()}
+              </div>
+              <button 
+                onClick={handleSignOut}
+                className={`flex items-center gap-1 text-[13px] font-bold cursor-pointer transition-colors ${
+                  scrolled ? "text-red-500 hover:text-red-600" : "text-red-400 hover:text-red-500"
+                }`}
+              >
+                <LogOut size={13} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link href="/signin" className="hover:text-[#0B5CFF]/85 cursor-pointer">Sign In</Link>
+              <button 
+                onClick={() => handleComingSoon("Zoom Global Help Desk")}
+                className="hover:text-[#0B5CFF]/85 cursor-pointer bg-transparent border-0"
+              >
+                Support
+              </button>
+              <button
+                onClick={() => handleComingSoon("Enterprise Sales Inquiry")}
+                className="px-5 py-2 rounded-lg text-[#0E0E2A] text-[14px] font-bold transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+                style={{
+                  background: "#FFFFFF",
+                  border: scrolled ? "1px solid rgba(14, 14, 42, 0.2)" : "none",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = "#F3F4F6";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = "#FFFFFF";
+                }}
+              >
+                Contact Sales
+              </button>
+              <Link href="/signup"
+                className="px-5 py-2 rounded-lg text-white text-[14px] font-bold animate-soft-pulse transition-all cursor-pointer hover:scale-[1.02]"
+                style={{ background: "var(--zoom-blue)" }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--zoom-blue-hover)")}
+                onMouseLeave={(e) => (e.currentTarget.style.background = "var(--zoom-blue)")}
+              >
+                Sign Up Free
+              </Link>
+            </>
+          )}
+
           <button 
             onClick={() => handleComingSoon("Zoom Apps Marketplace")}
             aria-label="Apps" 
@@ -157,11 +199,29 @@ export function Navbar() {
           <button onClick={() => handleComingSoon("Solutions Explorer")} className="text-left w-full hover:text-[#0B5CFF]">Solutions</button>
           <button onClick={() => handleComingSoon("Zoom Pricing & Plans")} className="text-left w-full hover:text-[#0B5CFF]">Pricing</button>
           <Link href="/dashboard" className="hover:text-[#0B5CFF]">Dashboard</Link>
-          <Link href="/signin" className="hover:text-[#0B5CFF]">Sign In</Link>
-          <button onClick={() => handleComingSoon("Zoom Global Help Desk")} className="text-left w-full hover:text-[#0B5CFF]">Support</button>
-          <Link href="/signup" className="mt-2 px-4 py-2.5 rounded-lg text-white font-bold text-sm text-center cursor-pointer transition-all" style={{ background: "var(--zoom-blue)" }}>
-            Sign Up Free
-          </Link>
+          
+          {userName ? (
+            <div className="flex items-center justify-between w-full pt-3 mt-1 border-t border-dashed border-zinc-500/20">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs select-none shadow">
+                  {userName.substring(0, 2).toUpperCase()}
+                </div>
+                <span className="font-semibold text-sm text-zinc-400 capitalize truncate max-w-[120px]">{userName}</span>
+              </div>
+              <button onClick={handleSignOut} className="text-red-500 font-bold text-sm hover:underline flex items-center gap-1">
+                <LogOut size={13} />
+                <span>Sign Out</span>
+              </button>
+            </div>
+          ) : (
+            <>
+              <Link href="/signin" className="hover:text-[#0B5CFF]">Sign In</Link>
+              <button onClick={() => handleComingSoon("Zoom Global Help Desk")} className="text-left w-full hover:text-[#0B5CFF]">Support</button>
+              <Link href="/signup" className="mt-2 px-4 py-2.5 rounded-lg text-white font-bold text-sm text-center cursor-pointer transition-all" style={{ background: "var(--zoom-blue)" }}>
+                Sign Up Free
+              </Link>
+            </>
+          )}
         </div>
       )}
     </nav>
