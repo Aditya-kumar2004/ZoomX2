@@ -23,6 +23,15 @@ export function ScheduleMeetingModal({ isOpen, onClose }: ScheduleMeetingModalPr
   const [isLoading, setIsLoading] = useState(false);
   const [dateError, setDateError] = useState("");
   const [formattedPreview, setFormattedPreview] = useState("");
+  const [hostName, setHostName] = useState("John Doe");
+
+  // Load user name from localStorage
+  useEffect(() => {
+    const stored = localStorage.getItem("zoom_user_name");
+    if (stored) {
+      setHostName(stored);
+    }
+  }, [isOpen]);
 
   // Reset and initialize fields when modal opens
   useEffect(() => {
@@ -116,7 +125,7 @@ export function ScheduleMeetingModal({ isOpen, onClose }: ScheduleMeetingModalPr
         description,
         scheduled_at: dateIso,
         duration_minutes: parseInt(duration),
-        host_name: "John Doe"
+        host_name: hostName
       });
       
       toast.success("Meeting scheduled successfully!");

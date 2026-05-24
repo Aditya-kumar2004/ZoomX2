@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Navbar } from "@/components/zoom/Navbar";
 import { Footer } from "@/components/zoom/Footer";
 import { ActionButtons } from "@/components/dashboard/ActionButtons";
@@ -6,13 +9,22 @@ import { RecentMeetings } from "@/components/dashboard/RecentMeetings";
 import { ClockWidget } from "@/components/dashboard/ClockWidget";
 
 export default function DashboardPage() {
+  const [userName, setUserName] = useState("John");
+
+  useEffect(() => {
+    const stored = localStorage.getItem("zoom_user_name");
+    if (stored) {
+      setUserName(stored.split(" ")[0]);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-50">
       <Navbar />
       
       <main className="flex-1 w-full max-w-6xl mx-auto px-4 py-8 md:py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome, John</h1>
+          <h1 className="text-3xl font-bold text-slate-900 mb-2">Welcome, {userName}</h1>
           <p className="text-slate-500">Manage your meetings and collaborate with your team.</p>
         </div>
 

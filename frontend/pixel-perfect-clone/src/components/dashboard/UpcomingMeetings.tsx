@@ -16,7 +16,8 @@ export function UpcomingMeetings() {
 
   const fetchMeetings = async () => {
     try {
-      const data = await api.getUpcomingMeetings();
+      const storedName = localStorage.getItem("zoom_user_name") || "John Doe";
+      const data = await api.getUpcomingMeetings(storedName);
       setMeetings(data);
     } catch (error) {
       console.error(error);

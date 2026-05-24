@@ -1,11 +1,28 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ChevronDown, Apple, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleSignUp = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!firstName.trim() || !lastName.trim() || !email.trim()) return;
+    
+    const fullName = `${firstName.trim()} ${lastName.trim()}`;
+    localStorage.setItem("zoom_user_name", fullName);
+    localStorage.setItem("zoom_user_email", email.trim());
+    
+    router.push("/dashboard");
+  };
 
   return (
     <div className="h-screen bg-white font-sans flex flex-col overflow-hidden">
@@ -26,13 +43,16 @@ export default function SignUpPage() {
             <h1 className="font-extrabold mb-1" style={{ fontSize: 32, color: "var(--zoom-dark)" }}>Sign Up Free</h1>
             <p className="text-gray-500 text-[14px] mb-6">Join millions of users worldwide and start connecting.</p>
 
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSignUp}>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <label className="text-[13px] font-semibold text-gray-700">First Name</label>
                   <input
                     type="text"
                     placeholder="John"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
                     className="w-full h-[44px] px-4 rounded-xl text-[14px] outline-none transition-all border border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   />
                 </div>
@@ -41,6 +61,9 @@ export default function SignUpPage() {
                   <input
                     type="text"
                     placeholder="Doe"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
                     className="w-full h-[44px] px-4 rounded-xl text-[14px] outline-none transition-all border border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                   />
                 </div>
@@ -51,6 +74,9 @@ export default function SignUpPage() {
                 <input
                   type="email"
                   placeholder="name@company.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
                   className="w-full h-[44px] px-4 rounded-xl text-[14px] outline-none transition-all border border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                 />
               </div>
@@ -60,6 +86,9 @@ export default function SignUpPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder="Create a strong password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
                   className="w-full h-[44px] px-4 rounded-xl text-[14px] outline-none transition-all border border-gray-300 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
                 />
                 <button 
@@ -71,15 +100,15 @@ export default function SignUpPage() {
                 </button>
               </div>
 
-              <Link href="/dashboard" className="block w-full pt-2">
+              <div className="block w-full pt-2">
                 <button
-                  type="button"
+                  type="submit"
                   className="w-full h-[48px] rounded-xl text-white text-[15px] font-bold transition-all shadow-lg hover:shadow-blue-500/25 active:scale-[0.98]"
                   style={{ background: "var(--zoom-blue)" }}
                 >
                   Create Account
                 </button>
-              </Link>
+              </div>
             </form>
 
             <div className="flex items-center gap-3 my-6 text-[13px] text-gray-400">

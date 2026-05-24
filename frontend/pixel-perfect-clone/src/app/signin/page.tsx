@@ -28,6 +28,16 @@ export default function SignInPage() {
     if (!password.trim()) return;
     
     setIsSubmitting(true);
+    
+    // Generate a beautiful display name from email (e.g. aditya.kumar@gmail.com -> Aditya Kumar)
+    const emailPrefix = email.split('@')[0];
+    const nameParts = emailPrefix.split(/[._-]/);
+    const capitalizedParts = nameParts.map(part => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase());
+    const generatedName = capitalizedParts.join(" ") || "John Doe";
+    
+    localStorage.setItem("zoom_user_name", generatedName);
+    localStorage.setItem("zoom_user_email", email.trim());
+    
     // Simulate backend API call with dummy data
     setTimeout(() => {
       router.push("/dashboard");

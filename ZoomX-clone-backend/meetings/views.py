@@ -48,14 +48,22 @@ def get_upcoming_meetings(request):
     # Get current time
     now = timezone.now()
     from datetime import timedelta
-    # Filter for scheduled meetings that haven't ended and are either:
-    # 1. Scheduled in the future (scheduled_at >= now)
-    # 2. Or scheduled in the past but within a 12-hour buffer (so active/waiting meetings don't vanish)
-    meetings = Meeting.objects.filter(
+    
+    # Get host_name parameter from query parameters
+    host_name = request.query_params.get('host_name')
+    
+    # Filter for scheduled meetings that haven't ended
+    queryset = Meeting.objects.filter(
         meeting_type='scheduled', 
         status__in=['waiting', 'active'],
         scheduled_at__gte=now - timedelta(hours=12)
-    ).order_by('scheduled_at') # Order by soonest first
+    )
+    
+    # Filter by host_name if provided to isolate meetings for other users
+    if host_name:
+        queryset = queryset.filter(host_name=host_name)
+        
+    meetings = queryset.order_by('scheduled_at') # Order by soonest first
     
     # Serialize the filtered queryset
     serializer = MeetingSerializer(meetings, many=True)

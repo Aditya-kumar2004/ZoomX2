@@ -92,7 +92,10 @@ export const api = {
   getAllMeetings: () => fetchApi<Meeting[]>('/'),
 
   // Get upcoming scheduled meetings
-  getUpcomingMeetings: () => fetchApi<Meeting[]>('/upcoming/'),
+  getUpcomingMeetings: (hostName?: string) => {
+    const url = hostName ? `/upcoming/?host_name=${encodeURIComponent(hostName)}` : '/upcoming/';
+    return fetchApi<Meeting[]>(url);
+  },
 
   // Get recent ended meetings
   getRecentMeetings: () => fetchApi<Meeting[]>('/recent/'),
