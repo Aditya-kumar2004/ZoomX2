@@ -4,11 +4,15 @@ import React from "react";
 import { useMeeting } from "./MeetingContext";
 import { Shield, ChevronUp, X, Copy, Mail, Clock } from "lucide-react";
 import { toast } from "sonner";
+import { useMeetingControls } from "@/hooks/useMeetingControls";
 
 export function ConnectionStatus() {
-  const { meeting, showDetails, setShowDetails, elapsedTime } = useMeeting();
+  const { meeting, showDetails, setShowDetails, elapsedTime, myParticipant } = useMeeting();
+  const { handleLeave } = useMeetingControls();
 
   if (!meeting) return null;
+
+  const isHost = meeting.host_name === myParticipant?.display_name;
 
   const handleCopyLink = () => {
     if (typeof window !== "undefined") {
@@ -25,21 +29,23 @@ export function ConnectionStatus() {
   };
 
   return (
-    <div className="h-[40px] bg-[#1A1A1A] flex items-center justify-between px-4 text-white border-b border-gray-800">
-      <div className="flex items-center gap-4">
-        <div className="flex items-center gap-2">
+    <div className="h-[40px] bg-[#1A1A1A] flex items-center justify-between px-3 sm:px-4 text-white border-b border-gray-800 select-none">
+      <div className="flex items-center gap-2 sm:gap-4">
+        <div className="flex items-center gap-1.5">
           <div className="bg-green-500 w-4 h-4 rounded text-black flex items-center justify-center">
             <Shield className="w-3 h-3" />
           </div>
-          <span className="text-[13px] font-semibold text-green-500 flex items-center gap-2">
-            LIVE <span className="text-white font-medium">Instant Meeting</span>
+          <span className="text-[12px] sm:text-[13px] font-semibold text-green-500 flex items-center gap-1">
+            LIVE <span className="hidden sm:inline text-white font-medium">Instant Meeting</span>
           </span>
         </div>
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-1.5 text-[11px] bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 font-semibold px-2.5 py-1 rounded border border-blue-500/30 transition-colors"
+          className="flex items-center gap-1.5 text-[10px] sm:text-[11px] bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 font-semibold px-2 sm:px-2.5 py-1 rounded border border-blue-500/30 transition-colors"
         >
-          Meeting Details <ChevronUp className={`w-3 h-3 text-blue-400 transition-transform ${showDetails ? "" : "rotate-180"}`} />
+          <span className="hidden xs:inline">Meeting Details</span>
+          <span className="xs:hidden">Details</span>{" "}
+          <ChevronUp className={`w-3 h-3 text-blue-400 transition-transform ${showDetails ? "" : "rotate-180"}`} />
         </button>
         
         {showDetails && (
@@ -130,11 +136,18 @@ export function ConnectionStatus() {
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <div className="flex items-center gap-1.5 bg-red-600/10 text-red-400 border border-red-500/20 px-2.5 py-1 rounded-lg text-[11px] font-bold select-none">
+      <div className="flex items-center gap-1.5 sm:gap-2">
+        <div className="flex items-center gap-1.5 bg-red-600/10 text-red-400 border border-red-500/20 px-2 sm:px-2.5 py-1 rounded-lg text-[10px] sm:text-[11px] font-bold select-none">
           <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse shrink-0" />
           <span className="tracking-wide">REC</span>
         </div>
+        {/* Sleek, red Zoom-style End/Leave button on mobile */}
+        <button
+          onClick={handleLeave}
+          className="md:hidden text-[10px] font-black text-white px-2.5 py-1 rounded bg-red-600 hover:bg-red-500 transition-colors border-0 uppercase tracking-wider shrink-0 cursor-pointer shadow-md shadow-red-600/20 font-sans"
+        >
+          {isHost ? "End" : "Leave"}
+        </button>
       </div>
     </div>
   );

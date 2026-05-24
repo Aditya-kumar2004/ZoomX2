@@ -375,7 +375,7 @@ function MeetingRoomContent() {
 
       {/* Main conference workspace */}
       <div className="flex-1 flex overflow-hidden relative">
-        <div className={`flex-1 p-3 bg-[#111111] transition-all duration-300 relative ${activeSidebar ? "mr-[320px]" : ""}`}>
+        <div className={`flex-1 p-3 bg-[#111111] transition-all duration-300 relative ${activeSidebar ? "md:mr-[320px]" : ""}`}>
           
           {/* Layout renderer */}
           {(() => {
@@ -443,13 +443,17 @@ function MeetingRoomContent() {
 
         {/* Sidebars */}
         {activeSidebar && (
-          <div className="w-[320px] bg-[#1C1C1C] border-l border-gray-800 absolute right-0 top-0 bottom-0 flex flex-col z-10 shadow-2xl transition-transform duration-300">
-            <div className="h-12 bg-[#242424] flex items-center justify-between px-4 border-b border-gray-800">
+          <div className="w-full md:w-[320px] bg-[#1C1C1C] border-l border-gray-800 absolute right-0 top-0 bottom-0 flex flex-col z-35 shadow-2xl transition-transform duration-300 animate-in slide-in-from-right duration-250">
+            <div className="h-14 bg-[#242424] flex items-center justify-between px-4 border-b border-gray-800">
               <span className="text-[14px] font-semibold text-gray-200">
                 {activeSidebar === "participants" ? "Participants" : "Meeting Chat"}
               </span>
-              <button onClick={() => setActiveSidebar(null)} className="text-gray-400 hover:text-white transition-colors">
-                <ChevronUp className="w-4 h-4 rotate-180" />
+              <button 
+                onClick={() => setActiveSidebar(null)} 
+                className="text-gray-400 hover:text-white transition-colors p-1.5 bg-white/5 hover:bg-white/10 rounded-lg"
+                title="Close"
+              >
+                <X className="w-4.5 h-4.5" />
               </button>
             </div>
             

@@ -94,7 +94,7 @@ export function PresentationLayout() {
         <div
           key="screenshare-card"
           onClick={() => setSwappedMainParticipantId(null)}
-          className="relative bg-black border border-gray-700 rounded-xl overflow-hidden cursor-pointer aspect-video shrink-0 group hover:border-blue-500 transition-all"
+          className="relative bg-black border border-gray-700 rounded-xl overflow-hidden cursor-pointer aspect-video shrink-0 group hover:border-blue-500 transition-all w-[160px] md:w-full h-full md:h-auto"
         >
           {isLocalScreenShare ? (
             <video
@@ -143,7 +143,7 @@ export function PresentationLayout() {
         <div
           key={`filmstrip-p-${p.id}`}
           onClick={() => setSwappedMainParticipantId(p.id)}
-          className="cursor-pointer aspect-video shrink-0 w-full hover:scale-[1.02] transition-transform duration-200"
+          className="cursor-pointer aspect-video shrink-0 w-[160px] md:w-full h-full md:h-auto hover:scale-[1.02] transition-transform duration-200"
         >
           <ParticipantTile p={p} />
         </div>
@@ -154,14 +154,14 @@ export function PresentationLayout() {
   };
 
   return (
-    <div className="flex h-full w-full gap-3 overflow-hidden">
+    <div className="flex flex-col md:flex-row h-full w-full gap-3 overflow-hidden">
       {/* Large Main Presentation Area */}
       <div className="flex-1 h-full min-w-0">
         {mainViewContent}
       </div>
 
-      {/* Scrollable Filmstrip Area (Right side, 260px width) */}
-      <div className="w-[260px] h-full overflow-y-auto pr-1 flex flex-col gap-2 shrink-0 select-none scrollbar-thin">
+      {/* Scrollable Filmstrip Area (Right side or bottom, responsive) */}
+      <div className="w-full md:w-[260px] h-[110px] md:h-full overflow-x-auto md:overflow-y-auto pb-1 md:pb-0 pr-1 flex flex-row md:flex-col gap-2 shrink-0 select-none scrollbar-thin">
         {renderFilmstripCards()}
       </div>
     </div>

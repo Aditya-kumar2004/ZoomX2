@@ -53,7 +53,7 @@ export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
         width: "100%",
         height: "100%",
         aspectRatio: isLarge ? "16/9" : undefined,
-        minHeight: isLarge ? "0" : "100px"
+        minHeight: "0"
       }}
     >
       {/* Video or Avatar */}
