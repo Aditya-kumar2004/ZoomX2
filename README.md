@@ -105,6 +105,11 @@ Traditional video communications suffer from high architectural overhead when al
 6. **💬 Live Contextual Chat**: Rich persistent chat interface synchronizing active messages. Includes a host-controlled global override to toggle text permissions.
 7. **🎉 Micro-Animated Live Reactions**: Immersive emoji feedback (👍, ❤️, 😂, 😮, 🎉, 👏) that overlays on user tiles and fades gracefully after 4 seconds.
 8. **📅 Hybrid Calendar Dashboard**: Beautiful personal hub detailing upcoming scheduled meetings (with local timezone previews), active meetings, and a history of recent sessions.
+9. **🛡️ Session Security & Route Protection**: Robust client-side dashboard authentication guards that intercept unauthenticated guests, redirecting them securely to Sign In.
+10. **💼 Isolated User Meetings**: Personalised multi-tenant isolation. Dashboards query backend filtering parameters so users only see and manage their own scheduled meetings.
+11. **🕒 Glass Clock & REC Indicators**: Centered translucent glass timer pills inside the conference header, paired with a pulsing standard red `REC` indicator for premium conferencing aesthetics.
+12. **🎨 Pixel-Perfect Zoom Waiting Room**: Light-themed split-column waiting lobby featuring a floating video card with real-time local camera capture streaming, custom spinner, and interactive "zoom AI Companion" gradient cards.
+13. **🔢 Hyphen-Resilient Meeting IDs**: Backend-level regex normalization and sanitisation that dynamically maps unformatted entries (e.g. `123456789`) to clean hyphenated schemas.
 
 ---
 
@@ -618,7 +623,8 @@ ZoomX features a premium design system tailored for professional collaboration:
 * **Dark-Mode Conf Canvas**: Glassmorphic slate styles designed to minimize visual fatigue during long calls.
 * **Grid and Sidebar Layouts**: A flexible grid system that dynamically adjusts user video tiles when sidebars (`Chat`, `Participants`) are toggled.
 * **Toast Notification Overlays**: Real-time popups with auto-dismiss timers to notify participants of chat messages when their sidebars are closed.
-* **Countdown Screens**: Smooth, micro-animated redirects that guide users back to the dashboard once a meeting is terminated.
+* **Pixel-Perfect Zoom Waiting Room**: Light-themed split-column waiting lobby featuring a floating video card with real-time local camera capture streaming, custom spinner, and interactive "zoom AI Companion" gradient cards.
+* **Futuristic End Screen**: End-of-meeting canvas featuring Indigo/Purple mesh ambient glows, checkmark shield icons, a customized SVG circular countdown spinner, and neon styling details.
 
 ---
 
