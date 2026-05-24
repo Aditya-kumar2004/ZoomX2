@@ -28,31 +28,32 @@
 
 ## 📖 Table of Contents
 1. [Overview](#-overview)
-2. [Project Technical Analysis](#-project-technical-analysis)
-3. [Key Features](#-key-features)
-4. [Tech Stack Matrix](#-tech-stack-matrix)
-5. [Complete Folder Structure](#-complete-folder-structure)
-6. [Frontend Architecture Analysis](#-frontend-architecture-analysis)
-7. [Backend Architecture Analysis](#-backend-architecture-analysis)
-8. [API Documentation](#-api-documentation)
-9. [WebSocket & Real-Time Signaling](#-websocket--real-time-signaling)
-10. [WebRTC Mesh Workflow](#-webrtc-mesh-workflow)
-11. [Database Schema & Architecture](#-database-schema--architecture)
-12. [Environment Variables Config](#-environment-variables-config)
-13. [Installation & Local Setup](#-installation--local-setup)
-14. [Running the Project](#-running-the-project)
-15. [Production Deployment Configuration](#-production-deployment-configuration)
-16. [Async & Performance Optimization](#-async--performance-optimization)
-17. [Security Implementation](#-security-implementation)
-18. [UI/UX & Accessibility Systems](#-uiux--accessibility-systems)
-19. [Screenshots](#-screenshots)
-20. [Demo & Interactive Links](#-demo--interactive-links)
-21. [Testing & Quality Assurance](#-testing--quality-assurance)
-22. [Troubleshooting Guide](#-troubleshooting-guide)
-23. [Future Product Roadmap](#-future-product-roadmap)
-24. [Contribution Guidelines](#-contribution-guidelines)
-25. [License](#-license)
-26. [Author & Contact](#-author--contact)
+2. [User Experience Flowchart & Guide](#-user-experience-flowchart--guide)
+3. [Project Technical Analysis](#-project-technical-analysis)
+4. [Key Features](#-key-features)
+5. [Tech Stack Matrix](#-tech-stack-matrix)
+6. [Complete Folder Structure](#-complete-folder-structure)
+7. [Frontend Architecture Analysis](#-frontend-architecture-analysis)
+8. [Backend Architecture Analysis](#-backend-architecture-analysis)
+9. [API Documentation](#-api-documentation)
+10. [WebSocket & Real-Time Signaling](#-websocket--real-time-signaling)
+11. [WebRTC Mesh Workflow](#-webrtc-mesh-workflow)
+12. [Database Schema & Architecture](#-database-schema--architecture)
+13. [Environment Variables Config](#-environment-variables-config)
+14. [Installation & Local Setup](#-installation--local-setup)
+15. [Running the Project](#-running-the-project)
+16. [Production Deployment Configuration](#-production-deployment-configuration)
+17. [Async & Performance Optimization](#-async--performance-optimization)
+18. [Security Implementation](#-security-implementation)
+19. [UI/UX & Accessibility Systems](#-uiux--accessibility-systems)
+20. [Screenshots](#-screenshots)
+21. [Demo & Interactive Links](#-demo--interactive-links)
+22. [Testing & Quality Assurance](#-testing--quality-assurance)
+23. [Troubleshooting Guide](#-troubleshooting-guide)
+24. [Future Product Roadmap](#-future-product-roadmap)
+25. [Contribution Guidelines](#-contribution-guidelines)
+26. [License](#-license)
+27. [Author & Contact](#-author--contact)
 
 ---
 
@@ -62,6 +63,75 @@
 
 ### Real-World Use Case & Problem Solved
 Traditional video communications suffer from high architectural overhead when all video streams traverse centralized Media Servers (SFUs/MCUs). ZoomX utilizes a **pure P2P mesh WebRTC architecture** for small-to-medium teams. By leveraging **Django Channels** and **Daphne** as a lightweight, low-overhead WebSocket signaling broker, ZoomX initiates direct, encrypted media streams between browsers. This eliminates specialized media server licensing costs and reduces operational server bandwidth costs to near-zero, proving ideal for decentralized small-business collaboration.
+
+---
+
+## 🗺️ User Experience Flowchart & Guide
+
+Below is a complete step-by-step flowchart displaying the entire end-to-end user experience of **ZoomX**. This guide illustrates how the routing layers, authentication state checking, waiting lobby controls, and the WebRTC mesh conferencing room operate:
+
+```mermaid
+flowchart TD
+    %% Styling definitions
+    classDef default fill:#F8FAFC,stroke:#E2E8F0,stroke-width:1.5px,color:#0F172A;
+    classDef start fill:#E0F2FE,stroke:#0EA5E9,stroke-width:2px,color:#0369A1,font-weight:bold;
+    classDef auth fill:#EEF2F6,stroke:#4F46E5,stroke-width:2px,color:#312E81;
+    classDef error fill:#FDF2F2,stroke:#EF4444,stroke-width:2px,color:#9B1C1C;
+    classDef lobby fill:#F3F4F6,stroke:#374151,stroke-width:2px,color:#111827;
+    classDef conf fill:#ECFDF5,stroke:#10B981,stroke-width:2px,color:#065F46;
+
+    %% Nodes
+    A([User Visits Landing Page]):::start
+    
+    %% Authentication Layer
+    A --> B{"Wants to open Dashboard?"}
+    B -- Direct entry --> C{"Signed In? <br> (zoom_user_name in storage)"}:::auth
+    C -- No --> D["Route Guard Intercepts <br> (Shows loading spinner)"]:::error
+    D --> E["Redirects to Sign In / Sign Up"]
+    C -- Yes --> F["Enters Dashboard"]
+    
+    %% Sign In/SignUp Flow
+    E --> G["Enter Name, Email, Password"]
+    G --> H["Stores name and email locally"]
+    H --> F
+    
+    %% Dashboard Options
+    F --> I["Dynamic Greeting: Welcome, User"]
+    I --> J{"Selects Action"}
+    
+    %% Schedule Meeting
+    J -- Schedule Meeting --> K["Opens Schedule Modal"]
+    K --> L["Selects Title, Date, Time, Duration"]
+    L --> M["Saves to Backend under dynamic host name"]
+    M --> N["Dashboard isolates and shows only own scheduled meetings"]
+    
+    %% Start/Join Meeting
+    J -- Start Instant Meeting --> O["Directly starts meeting as Host"]:::conf
+    J -- Join Meeting --> P["Opens Join Modal"]
+    P --> Q{"Validation Checks"}:::auth
+    
+    %% Name Validation Error
+    Q -- Name is empty? --> R["Displays 'Name is compulsory' warning popup"]:::error
+    Q -- Valid Name & Resilient ID? --> S{"Is Participant admitted?"}:::lobby
+    
+    %% Waiting Lobby
+    S -- "No: Status is 'waiting'" --> T["Zoom Waiting Room Screen <br> (Light theme & Split layout)"]:::lobby
+    T --> U["Floating video preview card <br> (Toggles real-time camera stream)"]
+    U --> V["Host receives join request in sidebar <br> (Approves admission)"]
+    V --> W["Enters Main WebRTC Meeting Room"]:::conf
+    
+    S -- "Yes: Status is 'admitted'" --> W
+    O --> W
+    
+    %% Conference Canvas
+    W --> X["WebRTC Video & Audio Sync <br> (Center Glass Clock & Pulsing REC)"]:::conf
+    X --> Y["Contextual Chat, Reactions, Host Controls Mute/Remove"]
+    
+    %% Leave/End
+    Y --> Z{"Participant leaves <br> or Host ends meeting"}
+    Z --> AA["Immersive Neon countdown End Screen <br> (SVG Radial loader)"]:::error
+    AA -- "10s Timer Ends" --> F
+```
 
 ---
 
