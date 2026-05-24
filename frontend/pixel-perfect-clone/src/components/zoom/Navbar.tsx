@@ -2,26 +2,50 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, ChevronDown, Sparkles, Grip, Menu, X, LogOut } from "lucide-react";
+import { Search, ChevronDown, Sparkles, Grip, Menu, X, LogOut, Mail, Shield, Settings, LayoutDashboard } from "lucide-react";
 import { handleComingSoon } from "@/lib/utils";
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [isHost, setIsHost] = useState<boolean>(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", onScroll);
     
     // Check localStorage for signed in user
-    const stored = localStorage.getItem("zoom_user_name");
-    setUserName(stored);
+    const storedName = localStorage.getItem("zoom_user_name");
+    const storedEmail = localStorage.getItem("zoom_user_email");
+    const storedIsHost = localStorage.getItem("zoom_is_host") === "true";
+    
+    setUserName(storedName);
+    setUserEmail(storedEmail || (storedName ? `${storedName.toLowerCase().replace(/\s+/g, "")}@zoomx.com` : null));
+    setIsHost(storedIsHost);
 
     return () => {
       window.removeEventListener("scroll", onScroll);
     };
   }, []);
+
+  useEffect(() => {
+    if (!showProfileMenu) return;
+    
+    const handleOutsideClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (!target.closest(".profile-dropdown-container")) {
+        setShowProfileMenu(false);
+      }
+    };
+    
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, [showProfileMenu]);
 
   const handleSignOut = () => {
     localStorage.removeItem("zoom_user_name");
@@ -110,22 +134,87 @@ export function Navbar() {
           <Link href="/dashboard" className="hover:text-[#0B5CFF]/85 cursor-pointer">Dashboard</Link>
           
           {userName ? (
-            <div className="flex items-center gap-3.5 pl-2 border-l border-zinc-500/20">
-              <div 
-                className="w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-[13px] border border-blue-500/20 select-none shadow-sm cursor-pointer hover:bg-blue-500 transition-colors" 
+            <div className="profile-dropdown-container relative flex items-center pl-2 border-l border-zinc-500/20">
+              <button 
+                onClick={() => setShowProfileMenu(!showProfileMenu)}
+                className="w-9 h-9 rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-rose-500 text-white flex items-center justify-center font-bold text-[13.5px] border border-white/20 select-none shadow-[0_4px_12px_rgba(139,92,246,0.25)] cursor-pointer hover:scale-105 hover:shadow-[0_4px_20px_rgba(139,92,246,0.4)] transition-all duration-300 ring-2 ring-violet-500/20 focus:outline-none"
                 title={userName}
               >
                 {userName.substring(0, 2).toUpperCase()}
-              </div>
-              <button 
-                onClick={handleSignOut}
-                className={`flex items-center gap-1 text-[13px] font-bold cursor-pointer transition-colors ${
-                  scrolled ? "text-red-500 hover:text-red-600" : "text-red-400 hover:text-red-500"
-                }`}
-              >
-                <LogOut size={13} />
-                <span>Sign Out</span>
               </button>
+
+              {showProfileMenu && (
+                <div className="absolute right-0 top-full mt-3 w-76 origin-top-right rounded-2xl border border-white/10 bg-[#0F0F23]/95 backdrop-blur-xl p-5 shadow-2xl z-[1001] animate-in fade-in slide-in-from-top-2 duration-200 text-white">
+                  {/* User Profile Header */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-rose-500 text-white flex items-center justify-center font-bold text-base border border-white/20 shadow-md">
+                      {userName.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-bold text-white text-[15px] capitalize truncate tracking-wide leading-snug">{userName}</span>
+                      {userEmail && (
+                        <span className="text-xs text-zinc-400 truncate max-w-[170px] font-medium leading-normal flex items-center gap-1 mt-0.5">
+                          <Mail size={11} className="text-zinc-500 shrink-0" />
+                          <span className="truncate">{userEmail}</span>
+                        </span>
+                      )}
+                      <div className="mt-1.5 self-start">
+                        {isHost ? (
+                          <span className="text-[9px] font-black text-fuchsia-300 bg-fuchsia-500/10 border border-fuchsia-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                            <Shield size={9} className="text-fuchsia-400" />
+                            <span>ZoomX Host</span>
+                          </span>
+                        ) : (
+                          <span className="text-[9px] font-black text-violet-300 bg-violet-500/10 border border-violet-500/20 px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+                            <Sparkles size={9} className="text-violet-400 animate-pulse" />
+                            <span>ZoomX Premium</span>
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-b border-white/5 my-4" />
+
+                  {/* Quick Action Navigation links */}
+                  <div className="space-y-1">
+                    <Link 
+                      href="/dashboard" 
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 transition-all text-sm font-semibold group cursor-pointer"
+                    >
+                      <LayoutDashboard size={16} className="text-zinc-500 group-hover:text-violet-400 transition-colors" />
+                      <span>Dashboard Hub</span>
+                    </Link>
+                    <button 
+                      onClick={() => {
+                        setShowProfileMenu(false);
+                        handleComingSoon("User Settings");
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-zinc-300 hover:text-white hover:bg-white/5 transition-all text-sm font-semibold group cursor-pointer text-left border-0 bg-transparent"
+                    >
+                      <Settings size={16} className="text-zinc-500 group-hover:text-fuchsia-400 transition-colors" />
+                      <span>Account Settings</span>
+                    </button>
+                  </div>
+
+                  {/* Divider */}
+                  <div className="border-b border-white/5 my-4" />
+
+                  {/* Red-highlighted Premium Sign Out Button */}
+                  <button 
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      handleSignOut();
+                    }}
+                    className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl text-red-400 hover:text-white bg-red-500/5 hover:bg-red-500 border border-red-500/20 hover:border-red-500 shadow-md shadow-red-500/5 hover:shadow-red-500/20 transition-all text-sm font-bold cursor-pointer"
+                  >
+                    <LogOut size={14} />
+                    <span>Sign Out</span>
+                  </button>
+                </div>
+              )}
             </div>
           ) : (
             <>
@@ -201,15 +290,39 @@ export function Navbar() {
           <Link href="/dashboard" className="hover:text-[#0B5CFF]">Dashboard</Link>
           
           {userName ? (
-            <div className="flex items-center justify-between w-full pt-3 mt-1 border-t border-dashed border-zinc-500/20">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold text-xs select-none shadow">
+            <div className="flex flex-col gap-3.5 pt-4 mt-2 border-t border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-rose-500 text-white flex items-center justify-center font-bold text-base select-none border border-white/20 shadow">
                   {userName.substring(0, 2).toUpperCase()}
                 </div>
-                <span className="font-semibold text-sm text-zinc-400 capitalize truncate max-w-[120px]">{userName}</span>
+                <div className="flex flex-col min-w-0">
+                  <span className="font-bold text-white text-sm capitalize truncate leading-tight">{userName}</span>
+                  {userEmail && (
+                    <span className="text-xs text-zinc-400 truncate max-w-[200px] leading-normal flex items-center gap-1 mt-0.5">
+                      <Mail size={11} className="text-zinc-500 shrink-0" />
+                      <span>{userEmail}</span>
+                    </span>
+                  )}
+                  <div className="mt-1.5 self-start">
+                    {isHost ? (
+                      <span className="text-[9px] font-black text-fuchsia-300 bg-fuchsia-500/10 border border-fuchsia-500/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                        <Shield size={9} className="text-fuchsia-400" />
+                        <span>ZoomX Host</span>
+                      </span>
+                    ) : (
+                      <span className="text-[9px] font-black text-violet-300 bg-violet-500/10 border border-violet-500/20 px-1.5 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1">
+                        <Sparkles size={9} className="text-violet-400 animate-pulse" />
+                        <span>ZoomX Premium</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
               </div>
-              <button onClick={handleSignOut} className="text-red-500 font-bold text-sm hover:underline flex items-center gap-1">
-                <LogOut size={13} />
+              <button 
+                onClick={handleSignOut} 
+                className="w-full py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 font-bold text-sm flex items-center justify-center gap-2 transition-all mt-1 cursor-pointer"
+              >
+                <LogOut size={14} />
                 <span>Sign Out</span>
               </button>
             </div>
