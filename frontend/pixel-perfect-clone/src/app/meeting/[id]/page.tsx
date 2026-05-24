@@ -460,7 +460,7 @@ function MeetingRoomContent() {
             }
 
             // 1. Presentation view
-            if (isScreenSharing && screenSharerName !== null) {
+            if (screenSharerName !== null) {
               return <PresentationLayout />;
             }
 
