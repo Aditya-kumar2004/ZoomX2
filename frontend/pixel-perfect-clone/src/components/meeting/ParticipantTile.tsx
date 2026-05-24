@@ -12,6 +12,7 @@ interface ParticipantTileProps {
 
 export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
   const {
+    meeting,
     myParticipant,
     isVideoOn,
     localStream,
@@ -23,11 +24,13 @@ export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
     pinnedParticipantId,
     setPinnedParticipantId,
     isMicOn,
-    screenStream
+    screenStream,
+    screenSharerName
   } = useMeeting();
 
   const isMe = p.display_name === myParticipant?.display_name;
-  const isLocalVideo = isMe && ((isVideoOn && localStream) || isScreenSharing);
+  const isLocalVideo = isMe && isVideoOn && !!localStream;
+  const isRemoteVideo = !isMe && remoteStreams.has(p.display_name) && p.display_name !== screenSharerName;
   const isSpeaking = activeSpeaker === p.display_name;
   const isPinned = pinnedParticipantId === p.id;
 
@@ -60,26 +63,25 @@ export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
       {isMe ? (
         isLocalVideo ? (
           <video
-            key={isScreenSharing ? "screen" : "camera"}
+            key="camera"
             ref={(el) => {
-              if (el) {
-                const stream = isScreenSharing && screenStream ? screenStream : localStream;
-                if (el.srcObject !== stream) {
-                  el.srcObject = stream;
+              if (el && localStream) {
+                if (el.srcObject !== localStream) {
+                  el.srcObject = localStream;
                 }
               }
             }}
             autoPlay
             playsInline
             muted
-            className={`w-full h-full object-cover ${!isScreenSharing ? "scale-x-[-1]" : ""}`}
+            className="w-full h-full object-cover scale-x-[-1]"
           />
         ) : (
-          <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-white bg-blue-600 text-2xl">
+          <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-white bg-blue-600 text-2xl animate-in zoom-in-75 duration-300 shadow-lg">
             {p.display_name.substring(0, 2).toUpperCase()}
           </div>
         )
-      ) : remoteStreams.has(p.display_name) ? (
+      ) : isRemoteVideo ? (
         <video
           ref={(el) => {
             if (el) {
@@ -97,7 +99,7 @@ export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
           className="w-full h-full object-cover"
         />
       ) : (
-        <div className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-white ${avatarColor} text-2xl`}>
+        <div className={`w-16 h-16 rounded-full flex items-center justify-center font-bold text-white ${avatarColor} text-2xl animate-in zoom-in-75 duration-300 shadow-lg`}>
           {p.display_name.substring(0, 2).toUpperCase()}
         </div>
       )}
@@ -128,9 +130,13 @@ export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
 
       {/* Name label */}
       <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent px-3 py-2 flex items-center justify-between z-10">
-        <span className="text-white text-xs font-semibold truncate flex items-center gap-1.5">
+        <span className="text-white text-xs font-semibold truncate flex items-center gap-1.5 select-none">
           {p.display_name}
-          {isMe ? " (You)" : ""}
+          {isMe || (meeting && p.display_name === meeting.host_name) ? (
+            <span className="text-[10px] text-gray-300 font-normal">
+              ({[isMe ? "You" : "", meeting && p.display_name === meeting.host_name ? "Host" : ""].filter(Boolean).join(", ")})
+            </span>
+          ) : ""}
           {isSpeaking && (
             <span className="flex items-center gap-0.5" title="Speaking">
               <span className="w-1 h-2 bg-blue-500 rounded-full animate-pulse" />

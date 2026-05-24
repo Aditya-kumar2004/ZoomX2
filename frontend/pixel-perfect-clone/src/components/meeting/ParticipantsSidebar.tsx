@@ -82,6 +82,7 @@ export function ParticipantsSidebar({ meeting, participants, currentUser, isHost
         
         {admittedParticipants.map((p) => {
           const isMe = p.display_name === currentUser;
+          const isParticipantHost = p.display_name === meeting.host_name;
           return (
             <div key={p.id} className="flex items-center justify-between p-2.5 hover:bg-[#2D2D2D] transition-colors border-b border-gray-800/30 group">
               <div className="flex items-center gap-2.5 min-w-0 flex-1 mr-2">
@@ -89,7 +90,12 @@ export function ParticipantsSidebar({ meeting, participants, currentUser, isHost
                   {p.display_name.substring(0, 2).toUpperCase()}
                 </div>
                 <span className="text-xs font-semibold truncate text-zinc-100" title={p.display_name}>
-                  {p.display_name} {isMe && <span className="text-zinc-500 font-normal">(You)</span>}
+                  {p.display_name}{" "}
+                  {(isMe || isParticipantHost) && (
+                    <span className="text-zinc-500 font-normal">
+                      ({[isMe ? "You" : "", isParticipantHost ? "Host" : ""].filter(Boolean).join(", ")})
+                    </span>
+                  )}
                 </span>
               </div>
  

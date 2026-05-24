@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Loader2, ChevronUp, X } from "lucide-react";
 import { toast } from "sonner";
@@ -72,6 +72,9 @@ function MeetingRoomContent() {
     myNameRef,
     chatNotifTimerRef
   } = context;
+
+  const [waitingNotif, setWaitingNotif] = useState<{ id: number; name: string } | null>(null);
+  const prevWaitingIdsRef = useRef<Set<number>>(new Set());
 
   const { connectSocket, disconnectSocket } = useMeetingSocket();
   const { cleanupPeerConnections } = useWebRTC();
@@ -227,6 +230,43 @@ function MeetingRoomContent() {
     return () => clearInterval(timer);
   }, [meetingEndedState.isEnded, localStream, screenStream]);
 
+  // Monitor waiting room participants for Host notifications
+  useEffect(() => {
+    if (!meeting || meeting.host_name !== myParticipant?.display_name) return;
+
+    const currentWaiting = participants.filter(p => p.status === "waiting");
+    const currentWaitingIds = new Set(currentWaiting.map(p => p.id));
+
+    // Find any newly waiting participant
+    const newWaiting = currentWaiting.find(p => !prevWaitingIdsRef.current.has(p.id));
+
+    if (newWaiting) {
+      setWaitingNotif({ id: newWaiting.id, name: newWaiting.display_name });
+    }
+
+    prevWaitingIdsRef.current = currentWaitingIds;
+  }, [participants, meeting, myParticipant]);
+
+  const handleAdmitWaiting = async (id: number) => {
+    try {
+      await api.admitParticipant(meetingId, id);
+      setWaitingNotif(null);
+      toast.success("Participant admitted!");
+    } catch (err) {
+      toast.error("Failed to admit participant");
+    }
+  };
+
+  const handleDeclineWaiting = async (id: number) => {
+    try {
+      await api.declineParticipant(meetingId, id);
+      setWaitingNotif(null);
+      toast.info("Participant declined");
+    } catch (err) {
+      toast.error("Failed to decline participant");
+    }
+  };
+
   // Join Lobby submit
   const handleJoinDirectly = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -375,8 +415,37 @@ function MeetingRoomContent() {
 
       {/* Main conference workspace */}
       <div className="flex-1 flex overflow-hidden relative">
-        <div className={`flex-1 p-3 bg-[#111111] transition-all duration-300 relative ${activeSidebar ? "md:mr-[320px]" : ""}`}>
+        <div className={`flex-1 h-full p-3 bg-[#111111] transition-all duration-300 relative overflow-hidden ${activeSidebar ? "md:mr-[320px]" : ""}`}>
           
+          {/* Waiting Room Toast Notification overlay for Host */}
+          {waitingNotif && (
+            <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-[#1c1c24]/95 backdrop-blur-xl border border-blue-500/25 shadow-2xl rounded-2xl p-4 flex items-center gap-4 z-50 max-w-md w-full animate-in slide-in-from-top-6 duration-300 shadow-blue-900/10 select-none">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shrink-0 shadow-md">
+                {waitingNotif.name.substring(0, 2).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs text-blue-400 font-extrabold tracking-wider uppercase mb-0.5">Lobby Request</p>
+                <p className="text-[12px] text-zinc-100 font-semibold leading-snug">
+                  <span className="text-white font-black">{waitingNotif.name}</span>: this user is waiting for you to admit them in the meeting.
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => handleAdmitWaiting(waitingNotif.id)}
+                  className="bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition-all shadow-md active:scale-95"
+                >
+                  Admit
+                </button>
+                <button
+                  onClick={() => handleDeclineWaiting(waitingNotif.id)}
+                  className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-semibold text-xs px-3 py-2 rounded-xl transition-all active:scale-95"
+                >
+                  Decline
+                </button>
+              </div>
+            </div>
+          )}
+
           {/* Layout renderer */}
           {(() => {
             const admitted = participants.filter(p => p.status === "admitted");

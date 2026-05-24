@@ -1,14 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useMeeting } from "./MeetingContext";
-import { Shield, ChevronUp, X, Copy, Mail, Clock } from "lucide-react";
+import { Shield, ChevronUp, X, Copy, Mail, Clock, Check } from "lucide-react";
 import { toast } from "sonner";
 import { useMeetingControls } from "@/hooks/useMeetingControls";
 
 export function ConnectionStatus() {
   const { meeting, showDetails, setShowDetails, elapsedTime, myParticipant } = useMeeting();
   const { handleLeave } = useMeetingControls();
+  const [copiedId, setCopiedId] = useState(false);
+  const [copiedLink, setCopiedLink] = useState(false);
 
   if (!meeting) return null;
 
@@ -18,6 +20,8 @@ export function ConnectionStatus() {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(`${window.location.origin}/join?id=${meeting.meeting_id}`);
       toast.success("Invite link copied!");
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
     }
   };
 
@@ -25,6 +29,8 @@ export function ConnectionStatus() {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(meeting.meeting_id);
       toast.success("Meeting ID copied!");
+      setCopiedId(true);
+      setTimeout(() => setCopiedId(false), 2000);
     }
   };
 
@@ -41,15 +47,16 @@ export function ConnectionStatus() {
         </div>
         <button
           onClick={() => setShowDetails(!showDetails)}
-          className="flex items-center gap-1.5 text-[10px] sm:text-[11px] bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 font-semibold px-2 sm:px-2.5 py-1 rounded border border-blue-500/30 transition-colors"
+          className="flex items-center justify-center bg-blue-600/10 hover:bg-blue-600/20 text-blue-400 font-semibold rounded border border-blue-500/30 transition-all w-7 h-7 sm:w-auto sm:h-auto sm:px-2.5 sm:py-1 text-[11px]"
+          title="Meeting Details"
         >
-          <span className="hidden xs:inline">Meeting Details</span>
-          <span className="xs:hidden">Details</span>{" "}
-          <ChevronUp className={`w-3 h-3 text-blue-400 transition-transform ${showDetails ? "" : "rotate-180"}`} />
+          <span className="hidden sm:inline mr-1">Meeting Details</span>
+          <span className="sm:hidden text-[11px] font-bold font-serif">i</span>{" "}
+          <ChevronUp className={`hidden sm:inline w-3 h-3 text-blue-400 transition-transform ${showDetails ? "" : "rotate-180"}`} />
         </button>
         
         {showDetails && (
-          <div className="absolute top-12 left-4 bg-[#242424] border border-gray-700 rounded-2xl p-6 shadow-2xl z-50 w-80 text-white animate-in slide-in-from-top-2">
+          <div className="absolute top-12 left-4 right-4 sm:right-auto sm:w-80 bg-[#242424] border border-gray-700 rounded-2xl p-5 sm:p-6 shadow-2xl z-50 text-white animate-in slide-in-from-top-2">
              <div className="flex justify-between items-start mb-5">
                <h3 className="font-bold text-[15px]">Meeting Information</h3>
                <button onClick={() => setShowDetails(false)} className="text-gray-400 hover:text-white transition-colors">
@@ -61,13 +68,17 @@ export function ConnectionStatus() {
                  <p className="text-gray-400 mb-1 text-xs font-semibold uppercase tracking-wider">Meeting ID</p>
                  <div className="flex items-center justify-between bg-[#111] border border-gray-700 rounded-xl px-3 py-2">
                    <p className="font-mono text-lg font-bold text-white tracking-wider">{meeting.meeting_id}</p>
-                   <button
-                     onClick={handleCopyId}
-                     className="text-gray-400 hover:text-white hover:bg-zinc-800 p-1.5 rounded-lg transition-colors"
-                     title="Copy Meeting ID"
-                   >
-                     <Copy size={15} />
-                   </button>
+                    <button
+                      onClick={handleCopyId}
+                      className="text-gray-400 hover:text-white hover:bg-zinc-800 p-1.5 rounded-lg transition-colors flex items-center justify-center"
+                      title="Copy Meeting ID"
+                    >
+                      {copiedId ? (
+                        <Check size={15} className="text-green-400 animate-in zoom-in-50" />
+                      ) : (
+                        <Copy size={15} />
+                      )}
+                    </button>
                  </div>
                </div>
                <div>
@@ -83,13 +94,17 @@ export function ConnectionStatus() {
                      value={typeof window !== "undefined" ? `${window.location.origin}/join?id=${meeting.meeting_id}` : ""}
                      className="bg-[#111] border border-gray-700 text-gray-300 px-3 py-2 rounded-xl flex-1 outline-none text-[11px] font-mono"
                    />
-                   <button
-                     onClick={handleCopyLink}
-                     className="bg-blue-600 hover:bg-blue-700 p-2.5 rounded-xl text-white transition-colors"
-                     title="Copy Invite Link"
-                   >
-                     <Copy size={15} />
-                   </button>
+                    <button
+                      onClick={handleCopyLink}
+                      className="bg-blue-600 hover:bg-blue-700 p-2.5 rounded-xl text-white transition-colors flex items-center justify-center"
+                      title="Copy Invite Link"
+                    >
+                      {copiedLink ? (
+                        <Check size={15} className="text-green-400 animate-in zoom-in-50" />
+                      ) : (
+                        <Copy size={15} />
+                      )}
+                    </button>
                  </div>
                </div>
 
