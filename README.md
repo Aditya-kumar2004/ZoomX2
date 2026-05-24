@@ -643,9 +643,6 @@ ZoomX features a premium design system tailored for professional collaboration:
 Explore ZoomX live in production:
 * 🌐 **Live Web Application**: [ZoomX Frontend Portal](https://pixel-perfect-clone-lime.vercel.app)
 * 🖥️ **Backend Web Service**: [Django Daphne ASGI Endpoint](https://zoomx-backend.onrender.com)
-* 📁 **Postman Workspace**: [REST Collection Definitions](https://www.postman.com)
-* 📖 **Product Walkthrough**: [Video Demonstration](https://youtube.com)
-
 ---
 
 ## 🧪 Testing & Quality Assurance
@@ -725,12 +722,12 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ## 👤 Author & Contact
 
 **Aditya Kumar**
-* 📧 Email: [adityakumar.dev@gmail.com](mailto:adityakumar.dev@gmail.com)
-* 💼 LinkedIn: [aditya-kumar-dev](https://linkedin.com/in/aditya-kumar-dev)
+* 📧 Email: [EMAIL_ADDRESS]
+* 💼 LinkedIn: [aditya-kumar-7050](https://www.linkedin.com/in/aditya-kumar7050/)
 * 💻 GitHub: [@Aditya-kumar2004](https://github.com/Aditya-kumar2004)
 
 ---
 
 <div align="center">
-  <p>Built with ❤️ for the global developer community. Happy coding!</p>
+  <p>Built with Aditya for the global developer community. Happy coding!</p>
 </div>
