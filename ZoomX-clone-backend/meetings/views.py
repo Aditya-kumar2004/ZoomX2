@@ -11,7 +11,17 @@ from .serializers import (
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+def normalize_meeting_id(meeting_id):
+    if not meeting_id:
+        return meeting_id
+    # Remove all non-alphanumeric characters
+    cleaned = ''.join(c for c in meeting_id if c.isalnum())
+    if len(cleaned) == 9:
+        return f"{cleaned[:3]}-{cleaned[3:6]}-{cleaned[6:]}"
+    return meeting_id
+
 def broadcast_meeting_event(meeting_id, event_type, data=None):
+    meeting_id = normalize_meeting_id(meeting_id)
     channel_layer = get_channel_layer()
     if data is None:
         data = {}
@@ -69,7 +79,7 @@ def create_instant_meeting(request):
     if not serializer.is_valid():
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    meeting_id = serializer.validated_data.get('meeting_id')
+    meeting_id = normalize_meeting_id(serializer.validated_data.get('meeting_id'))
     duration = serializer.validated_data.get('duration_minutes', 60)
     host_name = serializer.validated_data['host_name']
     
@@ -130,6 +140,7 @@ def schedule_meeting(request):
 
 @api_view(['GET'])
 def get_meeting_detail(request, meeting_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     # Try to find the meeting
     try:
         meeting = Meeting.objects.get(meeting_id=meeting_id)
@@ -143,6 +154,7 @@ def get_meeting_detail(request, meeting_id):
 
 @api_view(['POST'])
 def join_meeting(request, meeting_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     # Get meeting or return 404
     try:
         meeting = Meeting.objects.get(meeting_id=meeting_id)
@@ -190,6 +202,7 @@ def join_meeting(request, meeting_id):
 
 @api_view(['PATCH'])
 def end_meeting(request, meeting_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     # Try getting the meeting
     try:
         meeting = Meeting.objects.get(meeting_id=meeting_id)
@@ -212,6 +225,7 @@ def end_meeting(request, meeting_id):
 
 @api_view(['GET'])
 def validate_meeting(request, meeting_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     # Try fetching the meeting
     try:
         meeting = Meeting.objects.get(meeting_id=meeting_id)
@@ -236,6 +250,7 @@ def validate_meeting(request, meeting_id):
 
 @api_view(['GET', 'POST'])
 def chat_messages(request, meeting_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     try:
         meeting = Meeting.objects.get(meeting_id=meeting_id)
     except Meeting.DoesNotExist:
@@ -270,6 +285,7 @@ def chat_messages(request, meeting_id):
 
 @api_view(['PATCH'])
 def admit_participant(request, meeting_id, participant_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     try:
         participant = Participant.objects.get(id=participant_id, meeting__meeting_id=meeting_id)
         participant.status = 'admitted'
@@ -281,6 +297,7 @@ def admit_participant(request, meeting_id, participant_id):
 
 @api_view(['PATCH'])
 def decline_participant(request, meeting_id, participant_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     try:
         participant = Participant.objects.get(id=participant_id, meeting__meeting_id=meeting_id)
         participant.status = 'declined'
@@ -293,6 +310,7 @@ def decline_participant(request, meeting_id, participant_id):
 
 @api_view(['PATCH'])
 def toggle_chat(request, meeting_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     try:
         meeting = Meeting.objects.get(meeting_id=meeting_id)
         meeting.chat_enabled = not meeting.chat_enabled
@@ -304,6 +322,7 @@ def toggle_chat(request, meeting_id):
 
 @api_view(['PATCH'])
 def mute_participant(request, meeting_id, participant_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     try:
         participant = Participant.objects.get(id=participant_id, meeting__meeting_id=meeting_id)
         # toggle mute
@@ -322,6 +341,7 @@ def mute_participant(request, meeting_id, participant_id):
 
 @api_view(['DELETE'])
 def remove_participant(request, meeting_id, participant_id):
+    meeting_id = normalize_meeting_id(meeting_id)
     try:
         participant = Participant.objects.get(id=participant_id, meeting__meeting_id=meeting_id)
         participant.left_at = timezone.now()

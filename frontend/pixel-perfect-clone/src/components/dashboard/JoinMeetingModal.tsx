@@ -6,6 +6,8 @@ import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Switch } from "@/components/ui/switch";
+import { formatMeetingId } from "@/lib/utils";
+
 
 interface JoinMeetingModalProps {
   isOpen: boolean;
@@ -14,7 +16,8 @@ interface JoinMeetingModalProps {
 
 export function JoinMeetingModal({ isOpen, onClose }: JoinMeetingModalProps) {
   const [meetingId, setMeetingId] = useState("");
-  const [displayName, setDisplayName] = useState("John Doe");
+  const [displayName, setDisplayName] = useState("");
+  const [nameError, setNameError] = useState("");
   const [noAudio, setNoAudio] = useState(false);
   const [noVideo, setNoVideo] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
@@ -24,13 +27,23 @@ export function JoinMeetingModal({ isOpen, onClose }: JoinMeetingModalProps) {
 
   const handleJoin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!meetingId.trim() || !displayName.trim()) return;
+    const cleanMeetingId = meetingId.trim();
+    if (!cleanMeetingId) return;
+
+    if (!displayName.trim()) {
+      setNameError("Name is compulsory");
+      return;
+    }
+
+    setNameError("");
 
     try {
       setIsJoining(true);
       toast.loading("Validating meeting...", { id: "join-toast" });
       
-      const validation = await api.validateMeeting(meetingId);
+      const formattedMeetingId = formatMeetingId(cleanMeetingId);
+      
+      const validation = await api.validateMeeting(formattedMeetingId);
       if (!validation.valid) {
         toast.dismiss("join-toast");
         toast.error(`Cannot join: ${validation.error}`);
@@ -39,7 +52,7 @@ export function JoinMeetingModal({ isOpen, onClose }: JoinMeetingModalProps) {
       }
 
       toast.loading("Joining meeting...", { id: "join-toast" });
-      await api.joinMeeting(meetingId, displayName);
+      await api.joinMeeting(formattedMeetingId, displayName);
       
       // Store preferences
       localStorage.setItem('zoom_initial_video_on', noVideo ? 'false' : 'true');
@@ -51,7 +64,7 @@ export function JoinMeetingModal({ isOpen, onClose }: JoinMeetingModalProps) {
       toast.success("Joined successfully! Redirecting...");
       
       setTimeout(() => {
-        window.location.href = `/meeting/${meetingId}`;
+        window.location.href = `/meeting/${formattedMeetingId}`;
       }, 500);
     } catch (error: any) {
       toast.dismiss("join-toast");
@@ -109,12 +122,25 @@ export function JoinMeetingModal({ isOpen, onClose }: JoinMeetingModalProps) {
                     type="text"
                     placeholder="Enter your name"
                     value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
+                    onChange={(e) => {
+                      setDisplayName(e.target.value);
+                      if (e.target.value.trim()) {
+                        setNameError("");
+                      }
+                    }}
                     disabled={isJoining}
-                    className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-zinc-200 focus:border-[#0B5CFF] focus:ring-4 focus:ring-[#0B5CFF]/10 text-zinc-800 text-sm font-medium outline-none transition-all disabled:opacity-70 disabled:bg-zinc-50"
-                    required
+                    className={`w-full pl-10 pr-4 py-2.5 rounded-xl border ${
+                      nameError 
+                        ? "border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10" 
+                        : "border-zinc-200 focus:border-[#0B5CFF] focus:ring-4 focus:ring-[#0B5CFF]/10"
+                    } text-zinc-800 text-sm font-medium outline-none transition-all disabled:opacity-70 disabled:bg-zinc-50`}
                   />
                 </div>
+                {nameError && (
+                  <p className="text-red-500 text-xs font-semibold mt-1.5 animate-in fade-in slide-in-from-top-1 flex items-center gap-1">
+                    <span>⚠️</span> {nameError}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -155,7 +181,7 @@ export function JoinMeetingModal({ isOpen, onClose }: JoinMeetingModalProps) {
             </button>
             <button
               type="submit"
-              disabled={isJoining || !meetingId.trim() || !displayName.trim()}
+              disabled={isJoining || !meetingId.trim()}
               className="flex-[2] px-4 py-2.5 rounded-xl text-sm font-bold text-white bg-[#0B5CFF] hover:bg-[#094bdd] transition-all shadow-lg hover:shadow-[#0B5CFF]/25 flex items-center justify-center gap-2 disabled:opacity-70"
             >
               {isJoining ? (

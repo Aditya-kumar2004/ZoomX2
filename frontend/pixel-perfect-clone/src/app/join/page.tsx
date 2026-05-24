@@ -5,10 +5,13 @@ import { useSearchParams } from "next/navigation";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
 import { Loader2, Video, User, Hash } from "lucide-react";
+import { formatMeetingId } from "@/lib/utils";
+
 
 function JoinPageInner() {
   const searchParams = useSearchParams();
-  const meetingId = searchParams.get("id") || "";
+  const rawMeetingId = searchParams.get("id") || "";
+  const meetingId = formatMeetingId(rawMeetingId);
 
   const [displayName, setDisplayName] = useState("");
   const [isJoining, setIsJoining] = useState(false);

@@ -5,6 +5,8 @@ import { useParams, useRouter } from "next/navigation";
 import { Loader2, ChevronUp, X } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { formatMeetingId } from "@/lib/utils";
+
 
 import { MeetingProvider, useMeeting } from "@/components/meeting/MeetingContext";
 import { useMeetingSocket } from "@/hooks/useMeetingSocket";
@@ -25,7 +27,8 @@ import { formatElapsedTime } from "@/lib/utils";
 
 function MeetingRoomContent() {
   const params = useParams();
-  const meetingId = params.id as string;
+  const rawMeetingId = params.id as string;
+  const meetingId = formatMeetingId(rawMeetingId);
 
   const context = useMeeting();
   const {
@@ -243,52 +246,77 @@ function MeetingRoomContent() {
   // If ended, show countdown screen
   if (meetingEndedState.isEnded) {
     return (
-      <div className="h-screen w-screen bg-[#1A1A1A] flex items-center justify-center text-white p-4 font-sans select-none animate-in fade-in duration-300">
-        <div className="bg-[#242424]/90 border border-gray-800 backdrop-blur-xl p-8 rounded-3xl w-full max-w-md shadow-2xl flex flex-col items-center text-center relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20 mb-6 animate-bounce">
-            <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-              <polyline points="22 4 12 14.01 9 11.01" />
-            </svg>
+      <div className="h-screen w-screen bg-[#09090E] relative flex items-center justify-center text-white p-4 font-sans select-none overflow-hidden animate-in fade-in duration-700">
+        {/* Futuristic background ambient neon glowing orbs */}
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[150px]" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-indigo-600/10 blur-[150px]" />
+        <div className="absolute top-[30%] right-[20%] w-[30%] h-[30%] rounded-full bg-purple-600/5 blur-[120px]" />
+        
+        {/* Subtle grid mesh overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:32px_32px]" />
+
+        <div className="bg-[#141423]/70 border border-zinc-800/40 backdrop-blur-2xl p-10 rounded-[32px] w-full max-w-[440px] shadow-[0_20px_50px_rgba(0,0,0,0.5)] flex flex-col items-center text-center relative overflow-hidden animate-in zoom-in-95 duration-500">
+          {/* Top accent gradient bar */}
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500" />
+          
+          {/* Check Shield Icon with rotating border */}
+          <div className="relative w-20 h-20 mb-8 flex items-center justify-center">
+            {/* Spinning background glow */}
+            <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-600 to-purple-500 blur-md opacity-40 animate-pulse" />
+            <div className="absolute inset-0 rounded-[22px] bg-zinc-800/50 border border-zinc-700/30" />
+            
+            {/* Shield Check SVG */}
+            <div className="w-16 h-16 rounded-[18px] bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 z-10">
+              <svg className="w-8 h-8 text-white animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                <path d="m9 11 2 2 4-4" />
+              </svg>
+            </div>
           </div>
-          <h2 className="text-2xl font-bold mb-2 tracking-tight bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent">
+
+          <h2 className="text-[26px] font-black tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent mb-2.5">
             Thank You for using ZoomX!
           </h2>
-          <p className="text-gray-400 text-sm mb-6 max-w-xs font-medium">
+          <p className="text-zinc-400 text-sm mb-8 max-w-[320px] font-medium leading-relaxed">
             {meetingEndedState.reason === "ended"
-              ? "The meeting was ended by the host."
-              : "You have left the meeting."}
+              ? "The meeting has been ended by the host."
+              : "You have successfully left the meeting room."}
           </p>
-          <div className="w-full bg-[#1A1A1A] border border-gray-800 rounded-2xl p-4 mb-6 flex flex-col items-center">
-            <div className="relative w-16 h-16 flex items-center justify-center">
+          
+          {/* Circular Countdown Loader */}
+          <div className="w-full bg-[#0D0D15]/80 border border-zinc-800/80 rounded-[24px] p-6 mb-8 flex flex-col items-center shadow-inner">
+            <div className="relative w-20 h-20 flex items-center justify-center">
               <svg className="w-full h-full transform -rotate-90">
-                <circle cx="32" cy="32" r="28" className="stroke-gray-800" strokeWidth="4" fill="transparent" />
+                <circle cx="40" cy="40" r="34" className="stroke-zinc-800/50" strokeWidth="4.5" fill="transparent" />
                 <circle
-                  cx="32"
-                  cy="32"
-                  r="28"
-                  className="stroke-blue-500 transition-all duration-1000"
-                  strokeWidth="4"
+                  cx="40"
+                  cy="40"
+                  r="34"
+                  className="stroke-blue-500 transition-all duration-1000 ease-out"
+                  strokeWidth="5"
                   fill="transparent"
-                  strokeDasharray={2 * Math.PI * 28}
-                  strokeDashoffset={2 * Math.PI * 28 * (1 - countdown / 10)}
+                  strokeDasharray={2 * Math.PI * 34}
+                  strokeDashoffset={2 * Math.PI * 34 * (1 - countdown / 10)}
                   strokeLinecap="round"
                 />
               </svg>
-              <span className="absolute text-lg font-bold font-mono text-blue-400">
-                {countdown}s
-              </span>
+              <div className="absolute flex flex-col items-center justify-center">
+                <span className="text-[20px] font-black font-mono text-transparent bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text">
+                  {countdown}
+                </span>
+                <span className="text-[9px] uppercase tracking-widest text-zinc-500 font-bold -mt-1">sec</span>
+              </div>
             </div>
-            <p className="text-xs text-gray-500 mt-3 font-medium">
-              Redirecting to your dashboard automatically
+            <p className="text-xs text-zinc-500 mt-4 font-semibold tracking-wide">
+              Redirecting you to the dashboard automatically
             </p>
           </div>
+
           <button
             onClick={() => {
               window.location.href = "/dashboard";
             }}
-            className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition-all shadow-lg hover:shadow-blue-500/25 active:scale-[0.98] text-sm"
+            className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-bold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_20px_rgba(99,102,241,0.25)] hover:shadow-[0_4px_30px_rgba(99,102,241,0.45)] hover:scale-[1.01] active:scale-[0.99] text-sm tracking-wide"
           >
             Go to Dashboard Now
           </button>
@@ -445,7 +473,8 @@ function MeetingRoomContent() {
 
 export default function MeetingRoom() {
   const params = useParams();
-  const meetingId = params.id as string;
+  const rawMeetingId = params.id as string;
+  const meetingId = formatMeetingId(rawMeetingId);
   return (
     <MeetingProvider meetingId={meetingId}>
       <MeetingRoomContent />

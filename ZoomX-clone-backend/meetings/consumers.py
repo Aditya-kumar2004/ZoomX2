@@ -144,6 +144,8 @@ class MeetingConsumer(AsyncWebsocketConsumer):
 
     @sync_to_async
     def save_chat_message(self, meeting_id, sender_name, message):
+        from .views import normalize_meeting_id
+        meeting_id = normalize_meeting_id(meeting_id)
         try:
             meeting = Meeting.objects.get(meeting_id=meeting_id)
             ChatMessage.objects.create(
