@@ -29,7 +29,8 @@ export function NewMeetingModal({ isOpen, onClose }: NewMeetingModalProps) {
       
       // Wait for the API call to complete
       const pmiId = usePMI ? "853-291-4072" : undefined;
-      const meeting = await api.createInstantMeeting("John Doe", parseInt(duration), pmiId);
+      const storedName = localStorage.getItem("zoom_user_name") || "John Doe";
+      const meeting = await api.createInstantMeeting(storedName, parseInt(duration), pmiId);
       
       toast.dismiss();
       toast.success("Meeting created! Redirecting...", {

@@ -107,11 +107,13 @@ export const api = {
   validateMeeting: (meetingId: string) => fetchApi<{ valid: boolean; error?: string; meeting_id?: string; title?: string; host_name?: string; status?: string }>(`/${meetingId}/validate/`),
 
   // Create an instant meeting
-  createInstantMeeting: (hostName: string = 'John Doe', durationMinutes: number = 60, meetingId?: string) => 
-    fetchApi<Meeting>('/create/', {
+  createInstantMeeting: (hostName?: string, durationMinutes: number = 60, meetingId?: string) => {
+    const finalHostName = hostName || (typeof window !== "undefined" ? localStorage.getItem("zoom_user_name") : null) || 'John Doe';
+    return fetchApi<Meeting>('/create/', {
       method: 'POST',
-      body: JSON.stringify({ host_name: hostName, duration_minutes: durationMinutes, meeting_id: meetingId }),
-    }),
+      body: JSON.stringify({ host_name: finalHostName, duration_minutes: durationMinutes, meeting_id: meetingId }),
+    });
+  },
 
   // Schedule a future meeting
   scheduleMeeting: (data: { title: string; description?: string; host_name?: string; scheduled_at: string; duration_minutes: number }) =>
