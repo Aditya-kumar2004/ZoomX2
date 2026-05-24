@@ -301,35 +301,37 @@ function MeetingRoomContent() {
   // If ended, show countdown screen
   if (meetingEndedState.isEnded) {
     return (
-      <div className="min-h-screen w-screen bg-[#070814] relative flex items-center justify-center text-white p-4 sm:p-6 md:p-10 font-sans overflow-y-auto select-none">
+      <div className="min-h-screen w-screen bg-[#070814] relative flex items-center justify-center text-white p-4 sm:p-6 md:p-10 font-sans overflow-y-auto select-none animate-in fade-in duration-700">
         {/* Subtle grid mesh overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
         {/* Futuristic background ambient neon glowing orbs */}
-        <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-indigo-600/10 blur-[130px] pointer-events-none" />
+        <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-violet-600/10 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-fuchsia-600/10 blur-[130px] pointer-events-none" />
         <div className="absolute top-[30%] right-[20%] w-[35%] h-[35%] rounded-full bg-purple-600/5 blur-[120px] pointer-events-none" />
 
         <div className="bg-[#0D0D1F]/70 border border-zinc-800/40 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] grid grid-cols-1 md:grid-cols-12 overflow-hidden relative animate-in zoom-in-95 duration-500 min-h-[500px]">
           {/* Top accent gradient bar */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 z-30" />
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 z-30" />
 
           {/* Left Column: Premium Brand Conversion Showcase (7 cols on desktop) */}
           <div className="hidden md:flex md:col-span-7 p-10 flex-col justify-between bg-zinc-950/20 border-r border-zinc-800/20 relative">
             <div className="space-y-6">
-              {/* Brand Logo */}
-              <div className="inline-flex items-center gap-2.5">
-                <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                  <Video className="w-5 h-5 text-white" />
+              {/* Brand Logo - EXACT SVG Logo from landing navbar rendered in elegant violet */}
+              <div className="inline-flex items-center gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                <div className="text-violet-500 flex items-center justify-center">
+                  <svg viewBox="0 8.8 24 6.4" className="h-8 w-auto fill-current" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+                    <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
+                  </svg>
                 </div>
-                <span className="text-white font-extrabold text-2xl tracking-tight">ZoomX</span>
+                <span className="text-white font-extrabold text-2xl tracking-tighter ml-0.5 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent select-none">X</span>
               </div>
 
               {/* Headline */}
               <div className="space-y-3">
                 <h1 className="text-[32px] font-black leading-tight tracking-tight text-white">
                   Join the future of <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-400 to-blue-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 font-extrabold">
                     AI-first workspace
                   </span>
                 </h1>
@@ -347,7 +349,7 @@ function MeetingRoomContent() {
                     desc: "Automated meeting summaries, action items, and clear transcripts."
                   },
                   {
-                    icon: <MessageSquare className="w-4 h-4 text-blue-400" />,
+                    icon: <MessageSquare className="w-4 h-4 text-violet-400" />,
                     title: "Persistent Team Chat",
                     desc: "Keep the discussion going with channels, thread replies, and sharing."
                   },
@@ -384,21 +386,21 @@ function MeetingRoomContent() {
           <div className="col-span-12 md:col-span-5 p-8 sm:p-10 flex flex-col justify-center relative">
             {/* Small Brand Header for Mobile Viewport */}
             <div className="flex md:hidden items-center gap-2 mb-8 justify-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/10">
-                <Video className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-black text-lg">ZoomX</span>
+              <svg viewBox="0 8.8 24 6.4" className="h-6 w-auto fill-current text-violet-500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+                <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
+              </svg>
+              <span className="text-white font-extrabold text-lg -ml-1 select-none">X</span>
             </div>
 
             <div className="space-y-8 flex flex-col items-center text-center">
               {/* Check Shield Icon with rotating border */}
               <div className="relative w-20 h-20 flex items-center justify-center">
                 {/* Spinning background glow */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-blue-600 to-purple-500 blur-md opacity-40 animate-pulse" />
-                <div className="absolute inset-0 rounded-[22px] bg-zinc-850 border border-zinc-700/30" />
+                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-violet-600 to-fuchsia-500 blur-md opacity-40 animate-pulse" />
+                <div className="absolute inset-0 rounded-[22px] bg-zinc-855 border border-zinc-700/30" />
                 
                 {/* Shield Check SVG */}
-                <div className="w-16 h-16 rounded-[18px] bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/20 z-10">
+                <div className="w-16 h-16 rounded-[18px] bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-pink-600 flex items-center justify-center shadow-lg shadow-violet-500/20 z-10">
                   <svg className="w-8 h-8 text-white animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     <path d="m9 11 2 2 4-4" />
@@ -407,7 +409,7 @@ function MeetingRoomContent() {
               </div>
 
               <div className="space-y-2">
-                <h2 className="text-[26px] font-black tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent leading-none">
+                <h2 className="text-[26px] font-black tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent leading-none font-sans">
                   Meeting Ended
                 </h2>
                 <p className="text-zinc-400 text-xs max-w-[280px]">
@@ -426,7 +428,7 @@ function MeetingRoomContent() {
                       cx="36"
                       cy="36"
                       r="30"
-                      className="stroke-blue-500 transition-all duration-1000 ease-out"
+                      className="stroke-violet-500 transition-all duration-1000 ease-out"
                       strokeWidth="4"
                       fill="transparent"
                       strokeDasharray={2 * Math.PI * 30}
@@ -435,7 +437,7 @@ function MeetingRoomContent() {
                     />
                   </svg>
                   <div className="absolute flex flex-col items-center justify-center">
-                    <span className="text-lg font-black font-mono text-transparent bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text leading-none">
+                    <span className="text-lg font-black font-mono text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text leading-none">
                       {countdown}
                     </span>
                     <span className="text-[8px] uppercase tracking-widest text-zinc-500 font-extrabold mt-0.5">sec</span>
@@ -452,7 +454,7 @@ function MeetingRoomContent() {
                   onClick={() => {
                     window.location.href = "/signup";
                   }}
-                  className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_25px_rgba(99,102,241,0.25)] hover:shadow-[0_4px_35px_rgba(99,102,241,0.45)] hover:scale-[1.01] active:scale-[0.99] text-xs tracking-wider uppercase font-sans flex items-center justify-center gap-2 cursor-pointer"
+                  className="w-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 hover:from-violet-500 hover:via-fuchsia-500 hover:to-pink-500 text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_25px_rgba(139,92,246,0.25)] hover:shadow-[0_4px_35px_rgba(139,92,246,0.45)] hover:scale-[1.01] active:scale-[0.99] text-xs tracking-wider uppercase font-sans flex items-center justify-center gap-2 cursor-pointer animate-soft-pulse"
                 >
                   <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
                   <span>Create Free Account</span>
@@ -461,7 +463,7 @@ function MeetingRoomContent() {
                   onClick={() => {
                     window.location.href = "/dashboard";
                   }}
-                  className="w-full bg-zinc-900 hover:bg-zinc-850 border border-zinc-800/80 text-zinc-300 font-bold py-3.5 rounded-2xl transition-all active:scale-[0.99] text-xs tracking-wider uppercase font-sans cursor-pointer"
+                  className="w-full bg-zinc-900 hover:bg-zinc-855 border border-zinc-800/80 text-zinc-300 font-bold py-3.5 rounded-2xl transition-all active:scale-[0.99] text-xs tracking-wider uppercase font-sans cursor-pointer"
                 >
                   Go to Dashboard
                 </button>
@@ -490,30 +492,32 @@ function MeetingRoomContent() {
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
         {/* Futuristic background ambient neon glowing orbs */}
-        <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-blue-600/10 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-indigo-600/10 blur-[130px] pointer-events-none" />
+        <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-violet-600/10 blur-[130px] pointer-events-none" />
+        <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-fuchsia-600/10 blur-[130px] pointer-events-none" />
         <div className="absolute top-[30%] right-[20%] w-[35%] h-[35%] rounded-full bg-purple-600/5 blur-[120px] pointer-events-none" />
 
         <div className="bg-[#0D0D1F]/70 border border-zinc-800/40 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] grid grid-cols-1 md:grid-cols-12 overflow-hidden relative animate-in zoom-in-95 duration-500 min-h-[500px]">
           {/* Top accent gradient bar */}
-          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 z-30" />
+          <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 z-30" />
 
           {/* Left Column: Premium Brand & Features Showcase (7 cols on desktop) */}
           <div className="hidden md:flex md:col-span-7 p-10 flex-col justify-between bg-zinc-950/20 border-r border-zinc-800/20 relative">
             <div className="space-y-6">
-              {/* Brand Logo */}
-              <div className="inline-flex items-center gap-2.5">
-                <div className="w-10 h-10 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-500/20">
-                  <Video className="w-5 h-5 text-white" />
+              {/* Brand Logo - EXACT SVG Logo from landing navbar rendered in elegant violet */}
+              <div className="inline-flex items-center gap-2 transition-transform duration-300 hover:scale-[1.02]">
+                <div className="text-violet-500 flex items-center justify-center">
+                  <svg viewBox="0 8.8 24 6.4" className="h-8 w-auto fill-current" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+                    <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
+                  </svg>
                 </div>
-                <span className="text-white font-extrabold text-2xl tracking-tight">ZoomX</span>
+                <span className="text-white font-extrabold text-2xl tracking-tighter ml-0.5 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent select-none">X</span>
               </div>
 
               {/* Catchy landing-page headline */}
               <div className="space-y-3">
                 <h1 className="text-[32px] font-black leading-tight tracking-tight text-white">
                   Find out what&apos;s possible <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-400">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 font-extrabold">
                     when work connects
                   </span>
                 </h1>
@@ -526,7 +530,7 @@ function MeetingRoomContent() {
               <div className="space-y-4 pt-4">
                 {[
                   {
-                    icon: <Video className="w-4 h-4 text-blue-400" />,
+                    icon: <Video className="w-4 h-4 text-violet-400" />,
                     title: "Ultra-HD Video & Audio",
                     desc: "Crystal-clear lag-free video streams optimized for any bandwidth."
                   },
@@ -569,15 +573,15 @@ function MeetingRoomContent() {
           <div className="col-span-12 md:col-span-5 p-8 sm:p-10 flex flex-col justify-center relative">
             {/* Small Brand Header for Mobile Viewport */}
             <div className="flex md:hidden items-center gap-2 mb-8 justify-center">
-              <div className="w-8 h-8 bg-blue-600 rounded-xl flex items-center justify-center shadow-md shadow-blue-500/10">
-                <Video className="w-4 h-4 text-white" />
-              </div>
-              <span className="text-white font-black text-lg">ZoomX</span>
+              <svg viewBox="0 8.8 24 6.4" className="h-6 w-auto fill-current text-violet-500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+                <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
+              </svg>
+              <span className="text-white font-extrabold text-lg -ml-1 select-none">X</span>
             </div>
 
             <div className="space-y-6">
               <div>
-                <h2 className="text-2xl font-black tracking-tight text-white mb-1 md:text-left text-center">
+                <h2 className="text-2xl font-black tracking-tight text-white mb-1 md:text-left text-center font-sans">
                   Join Meeting
                 </h2>
                 <p className="text-zinc-400 text-xs md:text-left text-center">
@@ -587,7 +591,7 @@ function MeetingRoomContent() {
 
               {/* Dynamic Room Details Info Card */}
               <div className="bg-[#14142B]/80 border border-zinc-800/60 rounded-2xl p-4 space-y-2 shadow-inner">
-                <p className="text-[10px] font-extrabold uppercase tracking-wider text-blue-400">Meeting Room</p>
+                <p className="text-[10px] font-extrabold uppercase tracking-wider text-violet-400">Meeting Room</p>
                 <div className="space-y-1">
                   <h4 className="text-white font-bold text-sm truncate leading-snug">
                     {meeting?.title || "Instant Meeting"}
@@ -613,7 +617,7 @@ function MeetingRoomContent() {
                       onChange={(e) => setGuestName(e.target.value)}
                       autoFocus
                       required
-                      className="w-full bg-[#11111E] border border-zinc-800/80 rounded-2xl pl-10 pr-4 py-3.5 text-white placeholder-zinc-600 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/10 transition-all text-sm font-medium"
+                      className="w-full bg-[#11111E] border border-zinc-800/80 rounded-2xl pl-10 pr-4 py-3.5 text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all text-sm font-medium"
                     />
                   </div>
                 </div>
@@ -621,7 +625,7 @@ function MeetingRoomContent() {
                 <button
                   type="submit"
                   disabled={!guestName.trim()}
-                  className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:via-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_20px_rgba(99,102,241,0.2)] hover:shadow-[0_4px_30px_rgba(99,102,241,0.4)] active:scale-[0.99] text-xs tracking-wider uppercase font-sans mt-2 cursor-pointer"
+                  className="w-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 hover:from-violet-500 hover:via-fuchsia-500 hover:to-pink-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_20px_rgba(139,92,246,0.2)] hover:shadow-[0_4px_30px_rgba(139,92,246,0.4)] active:scale-[0.99] text-xs tracking-wider uppercase font-sans mt-2 cursor-pointer"
                 >
                   Join Meeting Room
                 </button>

@@ -83,7 +83,7 @@ function JoinPageInner() {
       <div className="h-screen w-screen bg-[#070814] flex items-center justify-center relative select-none">
         {/* Subtle grid mesh overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-        <Loader2 className="w-10 h-10 text-[#0B5CFF] animate-spin" />
+        <Loader2 className="w-10 h-10 text-violet-500 animate-spin" />
       </div>
     );
   }
@@ -127,20 +127,20 @@ function JoinPageInner() {
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
 
       {/* Futuristic background ambient neon glowing orbs */}
-      <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-[#0B5CFF]/10 blur-[130px] pointer-events-none" />
-      <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-indigo-600/10 blur-[130px] pointer-events-none" />
+      <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-violet-600/10 blur-[130px] pointer-events-none" />
+      <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-fuchsia-600/10 blur-[130px] pointer-events-none" />
       <div className="absolute top-[30%] right-[20%] w-[35%] h-[35%] rounded-full bg-purple-600/5 blur-[120px] pointer-events-none" />
 
       <div className="bg-[#0D0D1F]/70 border border-zinc-800/40 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] grid grid-cols-1 md:grid-cols-12 overflow-hidden relative animate-in zoom-in-95 duration-500 min-h-[500px]">
         {/* Top accent gradient bar */}
-        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#0B5CFF] via-indigo-500 to-purple-500 z-30" />
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 z-30" />
 
         {/* Left Column: Premium Brand & Features Showcase (7 cols on desktop) */}
         <div className="hidden md:flex md:col-span-7 p-10 flex-col justify-between bg-zinc-950/20 border-r border-zinc-800/20 relative">
           <div className="space-y-6">
-            {/* Brand Logo - EXACT SVG Logo from landing navbar */}
+            {/* Brand Logo - EXACT SVG Logo from landing navbar rendered in elegant violet */}
             <div className="inline-flex items-center gap-2 transition-transform duration-300 hover:scale-[1.02]">
-              <div className="text-[#0B5CFF] flex items-center justify-center">
+              <div className="text-violet-500 flex items-center justify-center">
                 <svg viewBox="0 8.8 24 6.4" className="h-8 w-auto fill-current" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
                   <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
                 </svg>
@@ -152,7 +152,7 @@ function JoinPageInner() {
             <div className="space-y-3">
               <h1 className="text-[32px] font-black leading-tight tracking-tight text-white">
                 Find out what&apos;s possible <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0B5CFF] via-indigo-400 to-purple-400 font-extrabold">
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 font-extrabold">
                   when work connects
                 </span>
               </h1>
@@ -165,7 +165,7 @@ function JoinPageInner() {
             <div className="space-y-4 pt-4">
               {[
                 {
-                  icon: <Video className="w-4 h-4 text-[#0B5CFF]" />,
+                  icon: <Video className="w-4 h-4 text-violet-400" />,
                   title: "Ultra-HD Video & Audio",
                   desc: "Crystal-clear lag-free video streams optimized for any bandwidth."
                 },
@@ -208,7 +208,7 @@ function JoinPageInner() {
         <div className="col-span-12 md:col-span-5 p-8 sm:p-10 flex flex-col justify-center relative">
           {/* Small Brand Header for Mobile Viewport */}
           <div className="flex md:hidden items-center gap-2 mb-8 justify-center">
-            <svg viewBox="0 8.8 24 6.4" className="h-6 w-auto fill-current text-[#0B5CFF]" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+            <svg viewBox="0 8.8 24 6.4" className="h-6 w-auto fill-current text-violet-500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
               <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
             </svg>
             <span className="text-white font-extrabold text-lg -ml-1 select-none">X</span>
@@ -216,7 +216,7 @@ function JoinPageInner() {
 
           <div className="space-y-6">
             <div>
-              <h2 className="text-2xl font-black tracking-tight text-white mb-1 md:text-left text-center">
+              <h2 className="text-2xl font-black tracking-tight text-white mb-1 md:text-left text-center font-sans">
                 Join Meeting
               </h2>
               <p className="text-zinc-400 text-xs md:text-left text-center">
@@ -226,7 +226,7 @@ function JoinPageInner() {
 
             {/* Dynamic Room Details Info Card */}
             <div className="bg-[#14142B]/80 border border-zinc-800/60 rounded-2xl p-4 space-y-2 shadow-inner">
-              <p className="text-[10px] font-extrabold uppercase tracking-wider text-[#0B5CFF]">You&apos;re Invited to Join</p>
+              <p className="text-[10px] font-extrabold uppercase tracking-wider text-violet-400">You&apos;re Invited to Join</p>
               <div className="space-y-1">
                 <h4 className="text-white font-bold text-sm truncate leading-snug">
                   {meetingInfo?.title || "Instant Meeting"}
@@ -253,7 +253,7 @@ function JoinPageInner() {
                     autoFocus
                     disabled={isJoining}
                     required
-                    className="w-full bg-[#11111E] border border-zinc-800/80 rounded-2xl pl-10 pr-4 py-3.5 text-white placeholder-zinc-600 focus:outline-none focus:border-[#0B5CFF] focus:ring-2 focus:ring-[#0B5CFF]/10 transition-all text-sm font-medium disabled:opacity-60"
+                    className="w-full bg-[#11111E] border border-zinc-800/80 rounded-2xl pl-10 pr-4 py-3.5 text-white placeholder-zinc-600 focus:outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10 transition-all text-sm font-medium disabled:opacity-60"
                   />
                 </div>
               </div>
@@ -261,7 +261,7 @@ function JoinPageInner() {
               <button
                 type="submit"
                 disabled={isJoining || !displayName.trim()}
-                className="w-full bg-gradient-to-r from-[#0B5CFF] via-indigo-600 to-[#0B5CFF] hover:from-[#0040CC] hover:to-[#0040CC] disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_20px_rgba(11,92,255,0.2)] hover:shadow-[0_4px_30px_rgba(11,92,255,0.4)] active:scale-[0.99] text-xs tracking-wider uppercase font-sans mt-2 cursor-pointer"
+                className="w-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-violet-600 hover:from-violet-750 hover:to-violet-750 disabled:opacity-50 disabled:cursor-not-allowed text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_20px_rgba(139,92,246,0.2)] hover:shadow-[0_4px_30px_rgba(139,92,246,0.4)] active:scale-[0.99] text-xs tracking-wider uppercase font-sans mt-2 cursor-pointer"
               >
                 {isJoining ? (
                   <span className="flex items-center justify-center gap-2">
@@ -297,7 +297,7 @@ export default function JoinPage() {
         <div className="h-screen w-screen bg-[#070814] flex items-center justify-center relative">
           {/* Subtle grid mesh overlay */}
           <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
-          <Loader2 className="w-10 h-10 text-[#0B5CFF] animate-spin" />
+          <Loader2 className="w-10 h-10 text-violet-500 animate-spin" />
         </div>
       }
     >
