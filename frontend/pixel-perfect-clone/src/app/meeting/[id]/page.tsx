@@ -21,6 +21,7 @@ import {
 import { toast } from "sonner";
 import { api } from "@/lib/api";
 import { formatMeetingId } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
 
 import { MeetingProvider, useMeeting } from "@/components/meeting/MeetingContext";
@@ -301,176 +302,292 @@ function MeetingRoomContent() {
   // If ended, show countdown screen
   if (meetingEndedState.isEnded) {
     return (
-      <div className="min-h-screen w-screen bg-[#070814] relative flex items-center justify-center text-white p-4 sm:p-6 md:p-10 font-sans overflow-y-auto select-none animate-in fade-in duration-700">
-        {/* Subtle grid mesh overlay */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+      <div className="min-h-screen w-screen bg-[#04040d] relative flex items-center justify-center text-white p-4 sm:p-6 md:p-8 font-sans overflow-x-hidden overflow-y-auto select-none">
+        
+        {/* Background gradients and mesh */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.012)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.012)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none -z-10" />
 
-        {/* Futuristic background ambient neon glowing orbs */}
-        <div className="absolute top-[-20%] left-[-15%] w-[60%] h-[60%] rounded-full bg-violet-600/10 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-[-20%] right-[-15%] w-[60%] h-[60%] rounded-full bg-fuchsia-600/10 blur-[130px] pointer-events-none" />
-        <div className="absolute top-[30%] right-[20%] w-[35%] h-[35%] rounded-full bg-purple-600/5 blur-[120px] pointer-events-none" />
+        {/* Pulsing neon radial blobs */}
+        <motion.div 
+          animate={{
+            x: [0, -20, 10, 0],
+            y: [0, 20, -20, 0],
+            scale: [1, 1.08, 0.95, 1],
+          }}
+          transition={{
+            duration: 16,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] rounded-full bg-violet-600/10 blur-[130px] pointer-events-none -z-10" 
+        />
+        <motion.div 
+          animate={{
+            x: [0, 20, -15, 0],
+            y: [0, -20, 15, 0],
+            scale: [1, 0.95, 1.05, 1],
+          }}
+          transition={{
+            duration: 14,
+            repeat: Infinity,
+            ease: "easeInOut"
+          }}
+          className="absolute -bottom-[10%] -right-[10%] w-[50%] h-[50%] rounded-full bg-fuchsia-600/10 blur-[130px] pointer-events-none -z-10" 
+        />
 
-        <div className="bg-[#0D0D1F]/70 border border-zinc-800/40 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] grid grid-cols-1 md:grid-cols-12 overflow-hidden relative animate-in zoom-in-95 duration-500 min-h-[500px]">
+        {/* Floating particles background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden -z-10">
+          {[...Array(12)].map((_, i) => (
+            <motion.div
+              key={i}
+              className="absolute w-1 h-1 bg-violet-400/30 rounded-full"
+              style={{
+                top: `${Math.random() * 100}%`,
+                left: `${Math.random() * 100}%`,
+              }}
+              animate={{
+                y: [0, -80, 0],
+                x: [0, Math.random() * 40 - 20, 0],
+                opacity: [0.1, 0.7, 0.1],
+                scale: [1, Math.random() * 1.5 + 1, 1],
+              }}
+              transition={{
+                duration: 10 + Math.random() * 8,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: Math.random() * 5,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Top Red Premium Alert for Kicked Users */}
+        <AnimatePresence>
+          {meetingEndedState.reason === "removed" && (
+            <motion.div
+              initial={{ opacity: 0, y: -50, x: "-50%", scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+              exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 120, damping: 16 }}
+              className="absolute top-6 left-1/2 w-full max-w-sm px-4 z-40"
+            >
+              <div className="bg-red-950/40 border border-red-500/30 backdrop-blur-2xl rounded-2xl p-4 flex items-center gap-3.5 shadow-[0_10px_30px_rgba(239,68,68,0.15)] relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-r from-red-500/5 to-transparent opacity-50 pointer-events-none" />
+                <div className="absolute -left-12 -top-12 w-24 h-24 bg-red-500/10 rounded-full blur-xl pointer-events-none group-hover:scale-110 transition-transform" />
+                
+                <div className="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/25 flex items-center justify-center text-red-400 shrink-0 shadow-inner">
+                  <svg className="w-5 h-5 animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                    <line x1="12" y1="9" x2="12" y2="13" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" />
+                  </svg>
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <p className="text-[9px] font-extrabold uppercase tracking-widest text-red-400">Connection Terminated</p>
+                  <h3 className="text-white font-bold text-xs mt-0.5 leading-snug">You were removed from the meeting.</h3>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Centered glassmorphism card (Split columns: left branding promo, right redirect action) */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.96, y: 15 }}
+          animate={{ opacity: 1, scale: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
+          className="bg-[#090A16]/65 border border-purple-500/15 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] hover:shadow-[0_25px_70px_rgba(139,92,246,0.06)] grid grid-cols-1 md:grid-cols-12 overflow-hidden relative min-h-[500px] transition-shadow duration-500"
+        >
           {/* Top accent gradient bar */}
           <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-violet-500 via-fuchsia-500 to-pink-500 z-30" />
 
           {/* Left Column: Premium Brand Conversion Showcase (7 cols on desktop) */}
           <div className="hidden md:flex md:col-span-7 p-10 flex-col justify-between bg-zinc-950/20 border-r border-zinc-800/20 relative">
-            <div className="space-y-6">
-              {/* Brand Logo - EXACT SVG Logo from landing navbar rendered in elegant violet */}
-              <div className="inline-flex items-center gap-2 transition-transform duration-300 hover:scale-[1.02]">
-                <div className="text-violet-500 flex items-center justify-center">
-                  <svg viewBox="0 8.8 24 6.4" className="h-8 w-auto fill-current" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+            <div className="space-y-8">
+              {/* Brand Logo */}
+              <div className="inline-flex items-center gap-2">
+                <div className="text-violet-500 flex items-center justify-center p-2.5 bg-violet-500/10 rounded-2xl border border-violet-500/20 backdrop-blur-md">
+                  <svg viewBox="0 8.8 24 6.4" className="h-6 w-auto fill-current" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
                     <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
                   </svg>
                 </div>
-                <span className="text-white font-extrabold text-2xl tracking-tighter ml-0.5 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent select-none">X</span>
+                <span className="text-white font-extrabold text-2xl tracking-tighter ml-0.5 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">X</span>
               </div>
 
-              {/* Headline */}
+              {/* Promotional Headline */}
               <div className="space-y-3">
-                <h1 className="text-[32px] font-black leading-tight tracking-tight text-white">
+                <h2 className="text-3xl font-extrabold leading-tight tracking-tight text-white">
                   Join the future of <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-400 font-extrabold">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-400 via-fuchsia-400 to-pink-500 font-extrabold">
                     AI-first workspace
                   </span>
-                </h1>
+                </h2>
                 <p className="text-zinc-400 text-sm leading-relaxed max-w-md">
                   Why stop at meetings? Create a free ZoomX account to access premium collaboration features built to scale your workflow.
                 </p>
               </div>
 
-              {/* Interactive Value Cards */}
-              <div className="grid grid-cols-2 gap-4 pt-4">
+              {/* Feature Promotion Cards */}
+              <div className="grid grid-cols-2 gap-4">
                 {[
                   {
-                    icon: <Sparkles className="w-4 h-4 text-yellow-400" />,
+                    icon: <Sparkles className="w-4.5 h-4.5" />,
                     title: "Smart AI Notes",
-                    desc: "Automated meeting summaries, action items, and clear transcripts."
+                    desc: "Automated meeting summaries, action items, and transcripts.",
+                    glow: "group-hover:text-amber-400 border-amber-500/20 bg-amber-500/5"
                   },
                   {
-                    icon: <MessageSquare className="w-4 h-4 text-violet-400" />,
+                    icon: <MessageSquare className="w-4.5 h-4.5" />,
                     title: "Persistent Team Chat",
-                    desc: "Keep the discussion going with channels, thread replies, and sharing."
+                    desc: "Channels, direct threads, and seamless document sharing.",
+                    glow: "group-hover:text-violet-400 border-violet-500/20 bg-violet-500/5"
                   },
                   {
-                    icon: <ArrowUpFromLine className="w-4 h-4 text-emerald-400" />,
+                    icon: <ArrowUpFromLine className="w-4.5 h-4.5" />,
                     title: "Digital Whiteboards",
-                    desc: "Co-annotate, draw, and brainstorm with your team live on any screen."
+                    desc: "Real-time co-annotation and interactive brainstorming.",
+                    glow: "group-hover:text-emerald-400 border-emerald-500/20 bg-emerald-500/5"
                   },
                   {
-                    icon: <Users className="w-4 h-4 text-indigo-400" />,
-                    title: "Up to 100 Guests",
-                    desc: "Host large-scale calls, webinars, or team meetups with zero limit."
+                    icon: <Users className="w-4.5 h-4.5" />,
+                    title: "Enterprise Collaboration",
+                    desc: "Up to 100 guest participants with zero limits and analytics.",
+                    glow: "group-hover:text-indigo-400 border-indigo-500/20 bg-indigo-500/5"
                   }
                 ].map((feat, idx) => (
-                  <div key={idx} className="bg-zinc-900/40 border border-zinc-800/40 p-4 rounded-2xl flex flex-col gap-2.5 shadow-sm hover:border-zinc-700/40 transition-colors">
-                    <div className="w-8 h-8 rounded-xl bg-zinc-800/50 flex items-center justify-center shrink-0">
+                  <motion.div 
+                    key={idx}
+                    whileHover={{ y: -2, scale: 1.01 }}
+                    className="group relative bg-[#090A16]/55 border border-zinc-800/40 hover:border-violet-500/25 p-4.5 rounded-2xl flex flex-col gap-2.5 shadow-sm transition-all duration-300"
+                  >
+                    <div className={`w-8.5 h-8.5 rounded-xl border flex items-center justify-center shrink-0 shadow-inner transition-colors duration-300 ${feat.glow}`}>
                       {feat.icon}
                     </div>
                     <div>
-                      <h3 className="text-white font-bold text-xs mb-0.5">{feat.title}</h3>
-                      <p className="text-zinc-500 text-[10px] leading-snug">{feat.desc}</p>
+                      <h3 className="text-white font-bold text-xs mb-0.5 group-hover:text-violet-200 transition-colors">{feat.title}</h3>
+                      <p className="text-zinc-550 text-[10px] leading-snug group-hover:text-zinc-400 transition-colors">{feat.desc}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
 
-            <p className="text-[10px] text-zinc-600 font-medium pt-6">
+            <p className="text-[10px] text-zinc-650 font-medium pt-4">
               © {new Date().getFullYear()} ZoomX Technologies Inc. All rights reserved.
             </p>
           </div>
 
           {/* Right Column: Thank You Details & Actions (5 cols on desktop) */}
-          <div className="col-span-12 md:col-span-5 p-8 sm:p-10 flex flex-col justify-center relative">
-            {/* Small Brand Header for Mobile Viewport */}
+          <div className="col-span-12 md:col-span-5 p-8 sm:p-10 flex flex-col justify-center relative bg-zinc-950/5">
+            {/* Mobile Logo */}
             <div className="flex md:hidden items-center gap-2 mb-8 justify-center">
-              <svg viewBox="0 8.8 24 6.4" className="h-6 w-auto fill-current text-violet-500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
-                <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
-              </svg>
-              <span className="text-white font-extrabold text-lg -ml-1 select-none">X</span>
+              <div className="text-violet-500 flex items-center justify-center p-2 bg-violet-500/10 rounded-xl border border-violet-500/20">
+                <svg viewBox="0 8.8 24 6.4" className="h-5 w-auto fill-current" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Zoom Logo">
+                  <path d="M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z" />
+                </svg>
+              </div>
+              <span className="text-white font-extrabold text-lg -ml-0.5">X</span>
             </div>
 
             <div className="space-y-8 flex flex-col items-center text-center">
-              {/* Check Shield Icon with rotating border */}
+              {/* Animated Success / Ended Icon */}
               <div className="relative w-20 h-20 flex items-center justify-center">
-                {/* Spinning background glow */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-violet-600 to-fuchsia-500 blur-md opacity-40 animate-pulse" />
-                <div className="absolute inset-0 rounded-[22px] bg-zinc-855 border border-zinc-700/30" />
+                {/* Pulsing ring and mesh blur behind */}
+                <motion.div 
+                  animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
+                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute inset-0 rounded-[24px] bg-gradient-to-tr from-violet-600 to-fuchsia-500 blur-md"
+                />
+                <div className="absolute inset-0 rounded-[22px] bg-[#0c0c1b] border border-zinc-800/40" />
                 
-                {/* Shield Check SVG */}
-                <div className="w-16 h-16 rounded-[18px] bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-pink-600 flex items-center justify-center shadow-lg shadow-violet-500/20 z-10">
-                  <svg className="w-8 h-8 text-white animate-pulse" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                {/* Glowing center icon */}
+                <motion.div 
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 150 }}
+                  className="w-15 h-15 rounded-[18px] bg-gradient-to-tr from-violet-600 via-fuchsia-600 to-pink-600 flex items-center justify-center shadow-lg shadow-violet-500/20 z-10"
+                >
+                  <svg className="w-7 h-7 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                     <path d="m9 11 2 2 4-4" />
                   </svg>
-                </div>
+                </motion.div>
               </div>
 
+              {/* Header & Subtext */}
               <div className="space-y-2">
-                <h2 className="text-[26px] font-black tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent leading-none font-sans">
+                <h2 className="text-2xl font-black tracking-tight bg-gradient-to-r from-white via-zinc-200 to-zinc-400 bg-clip-text text-transparent leading-none">
                   Meeting Ended
                 </h2>
-                <p className="text-zinc-400 text-xs max-w-[280px]">
+                <p className="text-zinc-400 text-xs max-w-[280px] leading-relaxed">
                   {meetingEndedState.reason === "ended"
                     ? "The meeting session has been closed by the host."
+                    : meetingEndedState.reason === "removed"
+                    ? "You were removed from this meeting room by the host."
                     : "You have successfully left the meeting room."}
                 </p>
               </div>
 
-              {/* Circular Countdown Loader */}
-              <div className="w-full bg-[#111124]/80 border border-zinc-800/80 rounded-[24px] p-5 flex flex-col items-center shadow-inner select-none">
+              {/* Circular Redirect Countdown Timer */}
+              <div className="w-full bg-[#0a0a19]/90 border border-zinc-800/80 rounded-[24px] p-5 flex flex-col items-center shadow-inner relative overflow-hidden group">
+                {/* Circular Timer representation */}
                 <div className="relative w-18 h-18 flex items-center justify-center">
                   <svg className="w-full h-full transform -rotate-90">
-                    <circle cx="36" cy="36" r="30" className="stroke-zinc-850" strokeWidth="4" fill="transparent" />
-                    <circle
+                    <circle cx="36" cy="36" r="30" className="stroke-zinc-850" strokeWidth="3.5" fill="transparent" />
+                    <motion.circle
                       cx="36"
                       cy="36"
                       r="30"
-                      className="stroke-violet-500 transition-all duration-1000 ease-out"
-                      strokeWidth="4"
+                      className="stroke-violet-500 drop-shadow-[0_0_8px_rgba(139,92,246,0.5)]"
+                      strokeWidth="3.5"
                       fill="transparent"
                       strokeDasharray={2 * Math.PI * 30}
-                      strokeDashoffset={2 * Math.PI * 30 * (1 - countdown / 10)}
+                      animate={{ strokeDashoffset: 2 * Math.PI * 30 * (1 - countdown / 10) }}
+                      transition={{ duration: 1, ease: "easeOut" }}
                       strokeLinecap="round"
                     />
                   </svg>
-                  <div className="absolute flex flex-col items-center justify-center">
-                    <span className="text-lg font-black font-mono text-transparent bg-gradient-to-r from-violet-400 to-fuchsia-400 bg-clip-text leading-none">
+                  <div className="absolute flex flex-col items-center justify-center leading-none">
+                    <span className="text-lg font-black font-mono text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-fuchsia-400">
                       {countdown}
                     </span>
-                    <span className="text-[8px] uppercase tracking-widest text-zinc-500 font-extrabold mt-0.5">sec</span>
+                    <span className="text-[8px] uppercase tracking-widest text-zinc-550 font-extrabold mt-0.5">sec</span>
                   </div>
                 </div>
-                <p className="text-[10px] text-zinc-500 mt-3 font-semibold tracking-wide uppercase">
+                <p className="text-[10px] text-zinc-500 mt-3.5 font-bold tracking-widest uppercase transition-colors group-hover:text-violet-400">
                   Redirecting to dashboard...
                 </p>
               </div>
 
-              {/* CTA Buttons */}
+              {/* Actions CTAs */}
               <div className="w-full space-y-3 pt-2">
-                <button
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={() => {
                     window.location.href = "/signup";
                   }}
-                  className="w-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 hover:from-violet-500 hover:via-fuchsia-500 hover:to-pink-500 text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_25px_rgba(139,92,246,0.25)] hover:shadow-[0_4px_35px_rgba(139,92,246,0.45)] hover:scale-[1.01] active:scale-[0.99] text-xs tracking-wider uppercase font-sans flex items-center justify-center gap-2 cursor-pointer animate-soft-pulse"
+                  className="w-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 hover:from-violet-500 hover:via-fuchsia-500 hover:to-pink-500 text-white font-extrabold py-3.5 rounded-2xl transition-all duration-300 shadow-[0_4px_25px_rgba(139,92,246,0.25)] hover:shadow-[0_4px_35px_rgba(139,92,246,0.45)] text-xs tracking-wider uppercase font-sans flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
+                  <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse shrink-0" />
                   <span>Create Free Account</span>
-                </button>
-                <button
+                </motion.button>
+                
+                <motion.button
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
                   onClick={() => {
                     window.location.href = "/dashboard";
                   }}
-                  className="w-full bg-zinc-900 hover:bg-zinc-855 border border-zinc-800/80 text-zinc-300 font-bold py-3.5 rounded-2xl transition-all active:scale-[0.99] text-xs tracking-wider uppercase font-sans cursor-pointer"
+                  className="w-full bg-zinc-900/60 hover:bg-zinc-850 hover:text-white border border-zinc-800/80 text-zinc-300 font-bold py-3.5 rounded-2xl transition-all text-xs tracking-wider uppercase font-sans cursor-pointer"
                 >
                   Go to Dashboard
-                </button>
+                </motion.button>
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -478,8 +595,9 @@ function MeetingRoomContent() {
   // Loading spinner
   if (loading) {
     return (
-      <div className="h-screen w-screen bg-[#1A1A1A] flex items-center justify-center text-white">
-        <Loader2 className="w-12 h-12 animate-spin text-blue-500" />
+      <div className="h-screen w-screen bg-[#04040d] flex items-center justify-center text-white relative">
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.015)_1px,transparent_1px)] bg-[size:32px_32px] pointer-events-none" />
+        <Loader2 className="w-12 h-12 animate-spin text-violet-500" />
       </div>
     );
   }

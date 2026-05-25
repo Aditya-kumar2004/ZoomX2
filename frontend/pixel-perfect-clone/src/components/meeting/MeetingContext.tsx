@@ -41,8 +41,8 @@ interface MeetingContextProps {
   setActiveSpeaker: React.Dispatch<React.SetStateAction<string | null>>;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  meetingEndedState: { isEnded: boolean; reason: "ended" | "left" };
-  setMeetingEndedState: React.Dispatch<React.SetStateAction<{ isEnded: boolean; reason: "ended" | "left" }>>;
+  meetingEndedState: { isEnded: boolean; reason: "ended" | "left" | "removed" };
+  setMeetingEndedState: React.Dispatch<React.SetStateAction<{ isEnded: boolean; reason: "ended" | "left" | "removed" }>>;
   countdown: number;
   setCountdown: React.Dispatch<React.SetStateAction<number>>;
   showReactionsMenu: boolean;
@@ -99,7 +99,7 @@ export function MeetingProvider({ children, meetingId }: { children: ReactNode; 
   const [pinnedParticipantId, setPinnedParticipantId] = useState<number | null>(null);
   const [activeSpeaker, setActiveSpeaker] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [meetingEndedState, setMeetingEndedState] = useState<{ isEnded: boolean; reason: "ended" | "left" }>({
+  const [meetingEndedState, setMeetingEndedState] = useState<{ isEnded: boolean; reason: "ended" | "left" | "removed" }>({
     isEnded: false,
     reason: "ended"
   });

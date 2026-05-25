@@ -105,7 +105,7 @@ export function useMeetingSocket() {
           const currentMe = myParticipantRef.current;
           if (currentMe && !activePoll.find(p => p.id === currentMe.id)) {
             toast.error("You were removed from the meeting");
-            setMeetingEndedState({ isEnded: true, reason: "left" });
+            setMeetingEndedState({ isEnded: true, reason: "removed" });
             return;
           }
 
