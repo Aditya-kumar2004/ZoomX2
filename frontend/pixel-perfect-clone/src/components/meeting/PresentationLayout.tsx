@@ -44,8 +44,25 @@ export function PresentationLayout() {
             ref={(el) => {
               if (el && screenSharerName) {
                 const stream = remoteStreams.get(screenSharerName);
-                if (stream && el.srcObject !== stream) {
-                  el.srcObject = stream;
+                if (stream) {
+                  const playVideo = () => {
+                    if (el.paused) {
+                      el.play().catch(e => console.error("Error playing remote screen share:", e));
+                    }
+                  };
+
+                  if (el.srcObject !== stream) {
+                    el.srcObject = stream;
+                  }
+
+                  // Force re-bind when a new track is added to the screen share stream
+                  stream.onaddtrack = () => {
+                    el.srcObject = null;
+                    el.srcObject = stream;
+                    playVideo();
+                  };
+
+                  playVideo();
                 }
               }
             }}
@@ -114,8 +131,25 @@ export function PresentationLayout() {
               ref={(el) => {
                 if (el) {
                   const stream = remoteStreams.get(screenSharerName);
-                  if (stream && el.srcObject !== stream) {
-                    el.srcObject = stream;
+                  if (stream) {
+                    const playVideo = () => {
+                      if (el.paused) {
+                        el.play().catch(e => console.error("Error playing screen share filmstrip:", e));
+                      }
+                    };
+
+                    if (el.srcObject !== stream) {
+                      el.srcObject = stream;
+                    }
+
+                    // Force re-bind when a new track is added to the screen share stream
+                    stream.onaddtrack = () => {
+                      el.srcObject = null;
+                      el.srcObject = stream;
+                      playVideo();
+                    };
+
+                    playVideo();
                   }
                 }
               }}

@@ -87,8 +87,25 @@ export function ParticipantTile({ p, isLarge = false }: ParticipantTileProps) {
             if (el) {
               remoteVideoRefs.current.set(p.display_name, el);
               const stream = remoteStreams.get(p.display_name);
-              if (stream && el.srcObject !== stream) {
-                el.srcObject = stream;
+              if (stream) {
+                const playVideo = () => {
+                  if (el.paused) {
+                    el.play().catch(err => console.error("Error playing remote video:", err));
+                  }
+                };
+
+                if (el.srcObject !== stream) {
+                  el.srcObject = stream;
+                }
+
+                // Force re-bind when a new track is added to the stream
+                stream.onaddtrack = () => {
+                  el.srcObject = null;
+                  el.srcObject = stream;
+                  playVideo();
+                };
+
+                playVideo();
               }
             } else {
               remoteVideoRefs.current.delete(p.display_name);

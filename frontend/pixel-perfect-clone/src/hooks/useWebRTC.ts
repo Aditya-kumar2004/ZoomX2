@@ -51,16 +51,20 @@ export function useWebRTC() {
     pc.ontrack = (event) => {
       const displayName = channelToNameRef.current.get(targetChannel);
       if (displayName && event.streams[0]) {
+        const stream = event.streams[0];
         setRemoteStreams(prev => {
           const next = new Map(prev);
-          next.set(displayName, event.streams[0]);
+          next.set(displayName, stream);
           return next;
         });
         // Bind to video element if it already exists
         setTimeout(() => {
           const videoEl = remoteVideoRefs.current.get(displayName);
-          if (videoEl && event.streams[0]) {
-            videoEl.srcObject = event.streams[0];
+          if (videoEl) {
+            // Force re-binding to ensure newly added tracks are recognized
+            videoEl.srcObject = null;
+            videoEl.srcObject = stream;
+            videoEl.play().catch(e => console.error("Error playing remote video ontrack:", e));
           }
         }, 100);
       }
